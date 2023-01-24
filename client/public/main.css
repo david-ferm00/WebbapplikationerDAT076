@@ -2,3 +2,34 @@
     background-color: aqua;
     
 }
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+@keyframes animation {
+    0% {background-color: red;}
+    25% {background-color: yellow;}
+    50% {background-color: green;}
+    75% {background-color: blue;}
+}
+
+.animated {
+    animation-name : animation;
+    animation-duration : 3s;
+    animation-iteration-count: infinite;
+}
+
+.listview {
+    width: 350px;
+    height: 500px;
+    border-style: ridge;
+    border-width: 5px;
+    border-color: black;
+    background-color: gray;
+    margin-top: 70px;
+}
