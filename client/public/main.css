@@ -3,6 +3,14 @@
     
 }
 
+.h1 {
+    font-size: x-large;
+}
+
+#title {
+    padding: 1em;
+}
+
 .background {
     background-color:rgb(243, 193, 119)
 }
