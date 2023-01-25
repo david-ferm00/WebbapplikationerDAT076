@@ -46,9 +46,6 @@
 }
 
 .box {
-    animation-name : move;
-    animation-duration : 1s;
-    animation-iteration-count: infinite;
     width: 100%;
     height: 90%;
     border-style: ridge;
@@ -93,14 +90,4 @@ html, body {
 
 .textbox{
     width: 100%;
-}
-
-.game-list{
-    width : 100%;
-    height: 85%;
-    border-style: ridge;
-    border-color: black;
-    border-width: 3px;
-    background-color: white;
-    margin-top: 5%;
 }
