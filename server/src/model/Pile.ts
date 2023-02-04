@@ -68,4 +68,16 @@ export class Pile{
     addCard(card:Card) {
         this.pile.push(card);
     } 
+
+    size(): number{
+        return this.pile.length;
+    }
+
+    remove(card: Card) : boolean{
+        if(this.pile.indexOf(card) > -1){
+            this.pile.splice(this.pile.indexOf(card), 1);
+            return true;
+        }
+        return false;
+    }
 }
