@@ -1,0 +1,6 @@
+import {Card} from './card';
+import {Pile} from './Pile';
+
+export class Game{
+    
+}
