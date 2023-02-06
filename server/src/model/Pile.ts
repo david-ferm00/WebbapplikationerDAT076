@@ -13,8 +13,8 @@ export class Pile{
 
     generateNewPile(): Array<Card> {
         let result = [];
-        for (let i = 0; i < 5; i++) {
-            for (let j = 0; j < 13; j++) {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 12; j++) {
                 result.push(new Card(i,j));
                 if(j!=0){
                     result.push(new Card(i,j));
@@ -48,11 +48,8 @@ export class Pile{
 
     pickTopCard(): Card{
         let card: Card = this.pile.pop()!;
-        if(card != undefined){
-            return card;
-        }
-        throw console.error("pile empty");
-        
+        return card;
+        //throw console.error("pile empty");
     }
     
     seeTopCard(): Card{
@@ -62,7 +59,8 @@ export class Pile{
             this.pile.push(card);
             return returnCard;
         }
-        throw console.error("pile empty");
+        return card;
+        //throw console.error("pile empty");
     }
 
     addCard(card:Card) {
