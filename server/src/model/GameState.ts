@@ -1,5 +1,5 @@
-import { Card } from "../model/card";
-import { Pile } from "../model/Pile";
+import { Card } from "./card";
+import { Pile } from "./Pile";
 
 export class GameState {
     yourPile: Pile;

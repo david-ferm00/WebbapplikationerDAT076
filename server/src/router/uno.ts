@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { Card } from "../model/card";
 import { Colour } from "../model/Colour";
 import { instantiateUnoService } from "../service/Game";
-import { GameState } from "../service/GameState";
+import { GameState } from "../model/GameState";
 
 export const unoRouter = express.Router();
 

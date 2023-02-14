@@ -1,6 +1,6 @@
 import {Card} from '../model/card';
 import {Pile} from '../model/Pile';
-import { GameState } from './GameState';
+import { GameState } from '../model/GameState';
 
 interface IUnoService {
     // define methods to inferface with the router layer

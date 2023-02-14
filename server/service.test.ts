@@ -1,5 +1,5 @@
 import { instantiateUnoService } from "./src/service/Game";
-import { GameState } from "./src/service/GameState";
+import { GameState } from "./src/model/GameState";
 
 test("When asking for gamestate before anything has happened the game state should be the start state of the game.", async () => {
     const unoService = instantiateUnoService();

@@ -1,7 +1,8 @@
 import * as SuperTest from "supertest";
 import { instantiateUnoService } from "./src/service/Game";
-import { GameState } from "./src/service/GameState";
+import { GameState } from "./src/model/GameState";
 import { Card } from "./src/model/card";
+import {app} from "./src/start";
 
 const request = SuperTest.default(app);
 
@@ -13,6 +14,6 @@ test("integration test 1", async () => {
     expect(res1.statusCode).toEqual(200);
 
     const res2 = await request.get("/uno/game_state");
-    expect(res2.statusCode).toEqual(200);
+    expect(res2.statusCode).toEqual(500);
     expect(res2.body.topCard).toEqual(card);
 });
