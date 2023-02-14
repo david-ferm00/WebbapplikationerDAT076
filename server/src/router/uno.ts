@@ -26,7 +26,7 @@ unoRouter.get("/uno/game_state", async (
     }
 });
 
-unoRouter.post("/uno/select_card", async (
+unoRouter.put("/uno/select_card", async (
     req: Request<{player_name : string , card : Card}>,
     res: Response<Card | string>
 ) => {
@@ -41,14 +41,15 @@ unoRouter.post("/uno/select_card", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
-        //unoService.putCard(player, card);
+        unoService.place(card, player);
+        res.status(200)
 
     } catch (e: any) {
         res.status(500).send(e.message)
     }
 });
 
-unoRouter.post("/uno/select_color", async (
+unoRouter.put("/uno/select_color", async (
     req: Request<{player_name : string , colour : Colour}>,
     res: Response<Colour | string>
 ) => {
@@ -70,7 +71,7 @@ unoRouter.post("/uno/select_color", async (
     }
 });
 
-unoRouter.post("/uno/say_uno", async (
+unoRouter.put("/uno/say_uno", async (
     req: Request<{player_name : string}>,
     res: Response<string>
 ) => {

@@ -1,6 +1,4 @@
 import { Card } from "../model/card";
-import { Colour } from "../model/Colour";
-import { Value } from "../model/Value";
 import { Pile } from "../model/Pile";
 
 export class GameState {

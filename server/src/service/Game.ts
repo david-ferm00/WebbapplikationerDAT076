@@ -6,9 +6,13 @@ interface IUnoService {
     // define methods to inferface with the router layer
 
     getState(requestedPlayer: number) : Promise<GameState>
+    place(card: Card, player: String) : Promise<boolean>
 }
 
 export class Game implements IUnoService{
+    player1Name : String;
+    player2Name : String;
+
     handPlayer1: Pile;
     handPlayer2 : Pile;
     drawDeck : Pile;
@@ -21,7 +25,7 @@ export class Game implements IUnoService{
     gameStatePlayer1 : GameState;
     gameStatePlayer2 : GameState;
 
-    constructor(code : String){
+    constructor(code : String, player1 : String, player2 : String){
         this.gameCode = code;
 
         this.handPlayer1 = new Pile(true);
@@ -42,6 +46,9 @@ export class Game implements IUnoService{
             this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard());
         this.gameStatePlayer2 = new GameState(this.handPlayer2, this.currentPlayer==2 ? true:false, 
             this.discardPile.size(), this.drawDeck.size(), this.handPlayer1.size(), this.discardPile.seeTopCard());
+
+        this.player1Name = player1;
+        this.player2Name = player2;
     }
 
     getRandomInt(max: number) : number {
@@ -80,16 +87,19 @@ export class Game implements IUnoService{
         return 0;
     }
 
-    place(card: Card, player: number) : void{
-        if(player == 1){
+    async place(card: Card, player: String) : Promise<boolean>{
+        if(player == this.player1Name){
             if(this.handPlayer1.remove(card)){
                 this.discardPile.addCard(card);
+                return true;
             }
-        } else if(player == 2){
+        } else if(player == this.player2Name){
             if(this.handPlayer2.remove(card)){
                 this.discardPile.addCard(card);
+                return true;
             }
         }
+        return false;
     }
 
     async getState(requestedPlayer: number) : Promise<GameState>{
@@ -113,5 +123,5 @@ export class Game implements IUnoService{
 }
 
 export function instantiateUnoService() : IUnoService {
-    return new Game("tbd"); 
+    return new Game("tbd", "1", "2"); 
 }
