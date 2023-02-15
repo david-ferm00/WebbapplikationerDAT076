@@ -5,7 +5,7 @@ import { GameState } from '../model/GameState';
 interface IUnoService {
     // define methods to inferface with the router layer
 
-    getState(requestedPlayer: number) : Promise<GameState>
+    getState(requestedPlayer: String) : Promise<GameState>
     place(card: Card, player: String) : Promise<boolean>
 }
 
@@ -102,15 +102,15 @@ export class Game implements IUnoService{
         return false;
     }
 
-    async getState(requestedPlayer: number) : Promise<GameState>{
-        if(requestedPlayer==1){
+    async getState(requestedPlayer: String) : Promise<GameState>{
+        if(requestedPlayer=="1"){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer1.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer1.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer1.yourPile = this.handPlayer1;
             this.gameStatePlayer1.yourTurn = this.currentPlayer==1 ? true:false;
             return this.gameStatePlayer1;
-        } else if(requestedPlayer==2){
+        } else if(requestedPlayer=="2"){
             this.gameStatePlayer2.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer2.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer2.topCard = this.discardPile.seeTopCard();

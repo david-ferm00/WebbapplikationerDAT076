@@ -19,8 +19,8 @@ unoRouter.get("/uno/game_state", async (
     res: Response<GameState>
 ) => {
     try {
-        //const GameState = await unoService.getState();
-        //res.status(200).send(GameState);
+        const GameState : GameState = await unoService.getState("1");
+        res.status(200).send(GameState);
     } catch (e: any) {
         res.status(500).send(e.message);
     }
@@ -31,13 +31,14 @@ unoRouter.put("/uno/select_card", async (
     res: Response<Card | string>
 ) => {
     try {
-        const player = req.body.player_name;
-        const card = req.body.card;
-        if (typeof(player) !== "string") {
+        const player:String = req.body.player_name;
+        const card:Card = req.body.card;
+        if (typeof player !== "string") {
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
             return;
         }
         if (typeof(card) !== typeof(Card)) {
+            console.log("card")
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }

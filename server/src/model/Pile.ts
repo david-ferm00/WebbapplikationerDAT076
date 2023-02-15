@@ -5,9 +5,9 @@ export class Pile{
 
     constructor(empty : Boolean){
         if(!empty){
-            let pile = this.shuffleDeck(this.generateNewPile());
+            this.pile = this.shuffleDeck(this.generateNewPile());
         } else {
-            let pile = [];
+            this.pile = [];
         }
     }
 
@@ -28,7 +28,7 @@ export class Pile{
             }
             
         }
-        return [];
+        return result;
     }
 
     shuffleDeck(deck : Array<Card>): Array<Card>{
