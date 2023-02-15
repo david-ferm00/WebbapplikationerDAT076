@@ -39,14 +39,18 @@ unoRouter.put("/uno/select_card", async (
         console.log("type of player: "+ typeof req.body.player_name)
         if (typeof player !== "string") {
             res.status(400).send(`Bad PUT call to  --- player_name has type ${typeof(player)}`);
+        }
+        console.log(typeof card);
+        if (typeof(player) !== "string") {
+            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
             return;
         }
-        if (typeof(card) !== typeof(Card)) {
-            res.status(400).send(`Bad PUT call to  --- card has type ${typeof(card)}`);
+        if (typeof(req.body.card) !== typeof(Card)) {
+            res.status(500).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
         unoService.place(card, player);
-        res.status(200)
+        res.status(200).send("Card placed");
 
     } catch (e: any) {
         res.status(500).send(e.message)
