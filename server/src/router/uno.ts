@@ -14,11 +14,14 @@ unoRouter.get("/", async (req: Request, res: Response) => {
 });
 
 
-unoRouter.get("/uno/game_state", async (
+unoRouter.get("/uno/game_state/:id", async (
     req: Request,
     res: Response<GameState>
 ) => {
     try {
+        if(req.params.id === "1") {
+            // 
+        } 
         const GameState : GameState = await unoService.getState("1");
         res.status(200).send(GameState);
     } catch (e: any) {
@@ -27,19 +30,19 @@ unoRouter.get("/uno/game_state", async (
 });
 
 unoRouter.put("/uno/select_card", async (
-    req: Request<{player_name : string , card : Card}>,
+    req: Request<{player_name:string , card:Card}>,
     res: Response<Card | string>
 ) => {
     try {
-        const player:String = req.body.player_name;
+        const player:string = req.body.player_name;
         const card:Card = req.body.card;
+        console.log("type of player: "+ typeof req.body.player_name)
         if (typeof player !== "string") {
-            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
+            res.status(400).send(`Bad PUT call to  --- player_name has type ${typeof(player)}`);
             return;
         }
         if (typeof(card) !== typeof(Card)) {
-            console.log("card")
-            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
+            res.status(400).send(`Bad PUT call to  --- card has type ${typeof(card)}`);
             return;
         }
         unoService.place(card, player);
