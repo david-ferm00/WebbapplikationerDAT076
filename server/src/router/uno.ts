@@ -13,12 +13,12 @@ unoRouter.get("/", async (req: Request, res: Response) => {
     res.status(200).send("It works!");
 });
 
-unoRouter.get("/uno/game_state", async (
-    req: Request,
+unoRouter.get("/uno/game_state/:id", async (
+    req: Request<{id : string},{},{}>,
     res: Response<GameState>
 ) => {
     try {
-        const GameState : GameState = await unoService.getState("1");
+        const GameState : GameState = await unoService.getState(req.params.id);
         res.status(200).send(GameState);
     } catch (e: any) {
         res.status(500).send(e.message);
@@ -104,4 +104,3 @@ unoRouter.put("/uno/say_uno", async (
 });
 
 // We want the clients to get specific information based on who is asking
-
