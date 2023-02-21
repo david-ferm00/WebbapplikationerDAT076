@@ -1,6 +1,5 @@
 import * as SuperTest from "supertest";
 import { instantiateUnoService } from "./src/service/Game";
-import { GameState } from "./src/model/GameState";
 import { Card } from "./src/model/card";
 import {app} from "./src/start";
 

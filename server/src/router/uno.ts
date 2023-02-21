@@ -14,14 +14,11 @@ unoRouter.get("/", async (req: Request, res: Response) => {
 });
 
 
-unoRouter.get("/uno/game_state/:id", async (
+unoRouter.get("/uno/game_state/", async (
     req: Request,
     res: Response<GameState>
 ) => {
     try {
-        if(req.params.id === "1") {
-            // 
-        } 
         const GameState : GameState = await unoService.getState("1");
         res.status(200).send(GameState);
     } catch (e: any) {
