@@ -103,14 +103,14 @@ export class Game implements IUnoService{
     }
 
     async getState(requestedPlayer: String) : Promise<GameState>{
-        if(requestedPlayer=="1"){
+        if(requestedPlayer==this.player1Name){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer1.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer1.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer1.yourPile = this.handPlayer1;
             this.gameStatePlayer1.yourTurn = this.currentPlayer==1 ? true:false;
             return this.gameStatePlayer1;
-        } else if(requestedPlayer=="2"){
+        } else if(requestedPlayer==this.player2Name){
             this.gameStatePlayer2.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer2.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer2.topCard = this.discardPile.seeTopCard();
