@@ -14,7 +14,7 @@ unoRouter.get("/", async (req: Request, res: Response) => {
 });
 
 unoRouter.get("/uno/game_state/:id", async (
-    req: Request<{id : string},{},{}>,
+    req: Request,
     res: Response<GameState>
 ) => {
     try {
@@ -24,21 +24,6 @@ unoRouter.get("/uno/game_state/:id", async (
         res.status(500).send(e.message);
     }
 });
-/*
-unoRouter.get("/uno/game_state/:id", async (
-
-unoRouter.get("/uno/game_state/", async (
-    req: Request,
-    res: Response<GameState>
-) => {
-    try {
-        const GameState : GameState = await unoService.getState("1");
-        res.status(200).send(GameState);
-    } catch (e: any) {
-        res.status(500).send(e.message);
-    }
-});
-*/
 
 unoRouter.put("/uno/select_card", async (
     req: Request<{player_name:string , card:Card}>,
@@ -104,3 +89,4 @@ unoRouter.put("/uno/say_uno", async (
 });
 
 // We want the clients to get specific information based on who is asking
+
