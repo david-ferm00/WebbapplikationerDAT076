@@ -7,7 +7,7 @@ import { GameState } from "../model/GameState";
 
 export const unoRouter = express.Router();
 
-const unoService = instantiateUnoService();
+const unoService = instantiateUnoService("tbd", "1");
 
 unoRouter.get("/", async (req: Request, res: Response) => {    
     res.status(200).send("It works!");
@@ -87,6 +87,15 @@ unoRouter.put("/uno/say_uno", async (
         res.status(500).send(e.message)
     }
 });
+
+unoRouter.put("/uno/pickUpCard/:code/:id"), async(req: Request, res: Response) =>{
+    try{
+        unoService.cardFromDrawPile(req.params.id);
+        res.status(200).send("Works")
+    }catch{
+        res.status(400).send("failed")
+    }
+}
 
 // We want the clients to get specific information based on who is asking
 

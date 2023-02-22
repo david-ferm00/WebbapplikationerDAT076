@@ -6,7 +6,7 @@ import {app} from "./src/start";
 const request = SuperTest.default(app);
 
 test("integration test 1", async () => {
-    const unoService = instantiateUnoService();
+    const unoService = instantiateUnoService("tbd", "1");
     const res = await request.get("/uno/game_state");
     expect(res.statusCode).toEqual(200);
     const card:Card = res.body.yourPile.pile[0];
