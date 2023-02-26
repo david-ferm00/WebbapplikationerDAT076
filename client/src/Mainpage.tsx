@@ -1,10 +1,11 @@
-import React from 'react';
-import logo from './logo.svg';
 import './Mainpage.css';
 import Button from 'react-bootstrap/Button';
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs';
 import 'bootstrap/dist/css/bootstrap.css';
+import axios from 'axios';
+import { Component } from "react";
+import { Form } from 'react-bootstrap';
 
 function Mainpage(){
     return(
@@ -15,7 +16,7 @@ function Mainpage(){
         <div className="container-fluid text-center">
             <div className="row h-100 justify-content-center">
                 <div className="col-md-auto">
-                    <h1 id="title" className="">
+                    <h1 id="title">
                         Uno game
                     </h1>
 
@@ -68,25 +69,55 @@ function Gamefinder() {
   );
 }
 
-function GameCreator(){
+class GameCreator extends Component{
+    state = {
+        code: "",
+        name: ""
+    };
+
+    onPress = async () =>{
+        await axios.post("http://localhost:8080/matchmaking/creategame/"+this.state.code+"/"+this.state.name)
+    }
+
+    render(){
     return (
         <div className="box">
-            <div className="row h-50">
-                <div className="col-6">
-                    <label htmlFor="gamecode-create">Gamecode:</label>
-                    <input className="textbox" type="text" id="gamecode-create" name="gamecode"/>
+            <Form>
+                <div className="row h-50">
+                    <div className="col-6">
+                        <Form.Group>
+                            <Form.Label htmlFor="gamecode-create">Gamecode:</Form.Label>
+                            <Form.Control 
+                                className="textbox" 
+                                type="text" 
+                                id="gamecode-create" 
+                                name="gamecode" 
+                                onChange={e => this.setState({ code: this.state.code, name: e.target.value })}/>
+                        </Form.Group>
+                    </div>
+                    <div className="col-6">
+                        <Form.Group>
+                            <Form.Label htmlFor="playerId">Your name:</Form.Label>
+                            <Form.Control 
+                                className="textbox" 
+                                type="text" 
+                                id="playerId" 
+                                name="playerID" 
+                                onChange={e => this.setState({ code: e.target.value, name: this.state.name })}/>
+                        </Form.Group>
+                    </div>
                 </div>
-                <div className="col-6">
-                    <label htmlFor="playerId">Your name:</label>
-                    <input className="textbox" type="text" id="playerId" name="playerID"/>
-                </div>
-            </div>
 
-            <div className="row h-50 align-items-end justify-content-center">
-                <div className="col-auto"> <input type="submit" value="submit"/> </div>
-            </div>
+                <div className="row h-50 align-items-end justify-content-center">
+                    <div className="col-auto">
+                        <Button variant="light" 
+                                type="reset" 
+                                onClick={this.onPress}> Submit </Button> 
+                    </div>
+                </div>
+            </Form>
         </div>
-    );
+    );}
 }
 
 export default Mainpage;

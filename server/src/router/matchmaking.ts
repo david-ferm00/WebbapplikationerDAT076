@@ -1,22 +1,28 @@
 import express from "express";
 import { Request, Response } from "express";
-import { Card } from "../model/card";
-import { Colour } from "../model/Colour";
 import { instantiateUnoService } from "../service/Game";
-import { GameState } from "../model/GameState";
+import { IUnoService } from "../service/Game";
 
 export const matchmakingRouter = express.Router();
 
-//const unoService = instantiateUnoService("tbd", "1");
+var unoService : IUnoService;
 
 //list of games
 matchmakingRouter.get("/matchmaking", async (req: Request, res: Response) => {    
     res.status(200).send("It works from matchmaking router!");
 });
 
+matchmakingRouter.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
+    if(unoService == undefined || unoService == null){
+        res.status(400).send(null)
+    } else {
+        res.status(200).send(unoService);
+    }
+});
+
 //create a game
-matchmakingRouter.post("/matchmaking/creatgame/:code/:id", async(req : Request, res: Response) => {
-    const unoService = instantiateUnoService(req.params.code, req.params.id);
+matchmakingRouter.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
+    unoService = instantiateUnoService(req.params.code, req.params.id);
 
     /*if(game code already exists){
         res.status(400).send("game code already exists");
