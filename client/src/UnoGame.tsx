@@ -39,12 +39,12 @@ export function DisplayCardFace (card : Card) {
 
 export function DisplayOpponentDeck (deckSize : number) {
     const [numberOfCards, setCounter] = useState<number>(0);
-
+    const cardBack = 
     <div className='card-back'>
         <img src={require('./images/back.jpg')} alt={"Back of card"} />
     </div>
 
     return <div className='opponent-hand'>
-        {}
+        <p>{numberOfCards}</p>
     </div>
 }
