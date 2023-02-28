@@ -2,7 +2,7 @@ import {Card} from '../model/card';
 import {Pile} from '../model/Pile';
 import { GameState } from '../model/GameState';
 
-interface IUnoService {
+export interface IUnoService {
     // define methods to inferface with the router layer
 
     cardFromDrawPile(player : string) : Promise<void>
