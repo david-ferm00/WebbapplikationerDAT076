@@ -4,7 +4,7 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
-import { Component } from "react";
+import { Component, useEffect, useState } from "react";
 import { Form } from 'react-bootstrap';
 
 function Mainpage(){
@@ -41,8 +41,25 @@ function Mainpage(){
     )
 }
 
-function Gamefinder() {
-  return (
+interface Games{
+    gameCode : string,
+    noOfPlayers : number
+}
+
+function Gamefinder(){
+    const [games, setGames] = useState<Games[]>([]);
+
+    useEffect(()=> {
+        async function updateTasks() {
+          // TODO Make it possible to change URL
+          const response = await axios.get<Games[]>("http://localhost:8080/matchmaking/gameslist/");
+          setGames(response.data);
+        }
+    
+        updateTasks();
+    }, []);
+
+    return (
         <div className="box">
             <div className="row h-30">
                 <div className="col-6" id="code-input">
@@ -58,15 +75,27 @@ function Gamefinder() {
             <div className="row h-85 justify-content-center">
                 <div className="game-list">
                     <ul>
-                        <li> <a href="game.html">gamecode1</a> </li>
+                        {games.map((game) => <ListItem gameCode = {game.gameCode} noOfPlayers={game.noOfPlayers}/>)}
+                        {/*<li> <a href="game.html">gamecode1</a> </li>
                         <li> <a href="game.html">gamecode2</a> </li>
                         <li> <a href="game.html">gamecode3</a> </li>
-                        <li> <a href="game.html">gamecode4</a> </li>
+                        <li> <a href="game.html">gamecode4</a> </li>*/}
                     </ul>
                 </div>
             </div>
         </div>
-  );
+    );
+}
+
+function ListItem({gameCode, noOfPlayers} : Games) {
+    return <li onClick={e => joinGame({gameCode, noOfPlayers})}>{gameCode} {noOfPlayers}</li>
+}
+
+async function joinGame({gameCode, noOfPlayers} : Games) : Promise<void>{
+    //TODO popup to insert name. find way to go to UNO page.
+    if(noOfPlayers<2){
+        await axios.put("/matchmaking/joinGame/"+gameCode+"/"/*:id*/)
+    }
 }
 
 class GameCreator extends Component{
