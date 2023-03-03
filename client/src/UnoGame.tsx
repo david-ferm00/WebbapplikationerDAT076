@@ -10,7 +10,7 @@ import { Value } from './uno/Value';
 
 //export function UnoGame(props:{player_id:string, game_id:string}) {
 export function UnoGame() {
-    const player_id = "1"
+    const player_id = "You"
     const game_code = "game123"
     
     const fakeCard:Card = {
@@ -23,8 +23,8 @@ export function UnoGame() {
         yourPile: new Pile(true),
         yourTurn: false,
         sizeGamePile: 0,
-        sizeDrawPile: 94,
-        sizeOppPile: 7,
+        sizeDrawPile: 4,
+        sizeOppPile: 0,
         topCard: fakeCard
     } 
 
@@ -55,12 +55,20 @@ export function UnoGame() {
     }, []);
 
     return (
-        <div className="row justify-content-center align-items-center">
+            <>
                 <div className="text-center justify-content-center align-items-center">
-                    <h1>{player_id}</h1>
+                    <h1>Opponent</h1>
                     {DisplayOpponentDeck(state.sizeOppPile)}
                 </div>
-            </div>
+                <div className="text-center justify-content-center align-items-center">
+                    <h1>Draw pile</h1>
+                    {DisplayDrawPile(state.sizeDrawPile)}
+                </div>
+                <div className="text-center justify-content-center align-items-center">
+                    <h1>{player_id}</h1>
+                    {DisplayYourDeck(state.yourPile)}
+                </div>
+            </>
     )
     
 
@@ -111,6 +119,7 @@ function DisplayYourDeck (pile : Pile) {
 
     function addCard(card:Card): void{
         alterNumberOfCards(prev => prev.addCard(card))
+        
     }
 
     function removeCard(card:Card): void{
@@ -125,8 +134,14 @@ function DisplayYourDeck (pile : Pile) {
     //     ));
     // }
     
+    const fakeCard:Card = {
+        colour: Colour.red,
+        value: Value.one,
+        image: one_red
+    }
+
     return <div className='your-hand'>
-        <Button onClick={() => addCard(cards[2])}> Add card</Button>
+        <Button onClick={() => addCard(fakeCard)}> Add card</Button>
         <Button onClick={() => removeCard(cards[1])}> Remove card</Button>
         {
             cards.map((card:Card) => (
@@ -137,11 +152,33 @@ function DisplayYourDeck (pile : Pile) {
 }
 
 function DisplayDrawPile(size:number) {
-    if (size > 5) {
-        return (
-            {CardBack}
-        )
-    }
+    const cards:number[] = Array(size)
+    // if (size > 5) {
+    //     return (
+    //         {CardBack}
+    //     )
+    // } else {
+    //     const cards:number[] = Array(size)
+    //      return (
+    //         <div className='draw-pile'>
+    //             {
+    //                 cards.map(() => (
+    //                     <CardBack/>
+    //                 ))
+    //             }
+    //         </div>
+    //     )
+    // }  
+    
+    return (
+        <div className='draw-pile'>
+            {
+                cards.map(() => (
+                    <CardBack/>
+                ))
+            }
+        </div>
+    )
 }
 
 export default UnoGame;
