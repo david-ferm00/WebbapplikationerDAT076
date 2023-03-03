@@ -10,6 +10,7 @@ export interface IUnoService {
     place(card: Card, player: string) : Promise<boolean>
     getCode() : string
     getNoOfPlayers() : number
+    setPlayerTwo(id : string) : void
 }
 
 export class Game implements IUnoService{
@@ -134,8 +135,12 @@ export class Game implements IUnoService{
 
     getNoOfPlayers() : number{
         if(this.player1Name == undefined) return 0;
-        if(this.player2Name == undefined) return 1;
+        if(this.player2Name == "") return 1;
         return 2;
+    }
+
+    setPlayerTwo(id: string): void {
+        this.player2Name = id;
     }
 }
 
