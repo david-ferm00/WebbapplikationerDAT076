@@ -5,21 +5,39 @@ import { GameState } from './uno/GameState'
 import Button from 'react-bootstrap/Button'
 import { Pile } from './uno/Pile';
 import { Card } from './uno/card';
+import { Colour } from './uno/Colour';
+import { Value } from './uno/Value';
 
 //export function UnoGame(props:{player_id:string, game_id:string}) {
 export function UnoGame() {
     const player_id = "1"
     const game_code = "game123"
+    
+    const fakeCard:Card = {
+        colour: Colour.red,
+        value: Value.one,
+        image: one_red
+    }
 
+    const defaultGameState:GameState = {
+        yourPile: new Pile(true),
+        yourTurn: false,
+        sizeGamePile: 0,
+        sizeDrawPile: 94,
+        sizeOppPile: 7,
+        topCard: fakeCard
+    } 
+
+    const [state, updateGameState] = useState(defaultGameState)
     const [opponents, alterOpponents] = useState([""])
 
-    function RemoveOpponent(opponent : string) {
+    function removeOpponent(opponent : string) {
         alterOpponents(prev => prev.filter((element) => 
         element !== opponent
         ));
     }
 
-    function AddOpponent(opponent : string) {
+    function addOpponent(opponent : string) {
         alterOpponents(prev => prev.concat([opponent]))
     }
 
@@ -28,6 +46,7 @@ export function UnoGame() {
             //const res = await axios.get<GameState>("http://localhost:3000/game_state", {params: {id: player_id, game_code: game_code}});
             const res = await axios.get<GameState>("http://localhost:3000/game_state", {params: {id: player_id}});
             console.log(res.data)
+            updateGameState(res.data)
         }, 2000);
         // remove the interval when the component is unmounted
         return () => {
@@ -36,16 +55,18 @@ export function UnoGame() {
     }, []);
 
     return (
-    <center>
-        <h1>{player_id}</h1>
-        {DisplayOpponentDeck(0)}
-    </center>
+        <div className="row justify-content-center align-items-center">
+                <div className="text-center justify-content-center align-items-center">
+                    <h1>{player_id}</h1>
+                    {DisplayOpponentDeck(state.sizeOppPile)}
+                </div>
+            </div>
     )
     
 
 }
 
-export function CardFace (card: Card) {
+function CardFace (card: Card) {
     return <img src={require(card.image)} alt={"Value: " + card.colour + " Colour: " + card.colour} onClick={() => selectCard(card)} />
 }
 
@@ -53,7 +74,7 @@ function selectCard(card:Card) {
     console.log("card clicked")
 }
 
-export function CardBack() {
+function CardBack() {
     return (
         <div className='card-back'>
             <img src={require('./images/back.jpg')} alt={"Back of card"} />
@@ -62,8 +83,8 @@ export function CardBack() {
 } 
 
 
-export function DisplayOpponentDeck (deckSize : number) {
-    const [cards, alterNumberOfCards] = useState<number[]>(Array(deckSize));
+function DisplayOpponentDeck (size : number) {
+    const [cards, alterNumberOfCards] = useState<number[]>(Array(size));
     
     function addCard(){
         alterNumberOfCards(prev => prev.concat(1))
@@ -85,7 +106,7 @@ export function DisplayOpponentDeck (deckSize : number) {
     </div>
 }
 
-export function DisplayYourDeck (pile : Pile) {
+function DisplayYourDeck (pile : Pile) {
     const [cards, alterNumberOfCards] = useState<Pile>(pile);
 
     function addCard(card:Card): void{
@@ -112,8 +133,15 @@ export function DisplayYourDeck (pile : Pile) {
                 <CardFace colour={card.colour} value={card.value} image={card.image} />
             ))
         }
-        
     </div>
+}
+
+function DisplayDrawPile(size:number) {
+    if (size > 5) {
+        return (
+            {CardBack}
+        )
+    }
 }
 
 export default UnoGame;
