@@ -47,12 +47,11 @@ interface Games{
 }
 
 function Gamefinder(){
-    const [games, setGames] = useState<Games[]>([]);
+    const [games, setGames] = useState<Games>();
 
     useEffect(()=> {
         async function updateTasks() {
-          // TODO Make it possible to change URL
-          const response = await axios.get<Games[]>("http://localhost:8080/matchmaking/gameslist/");
+          const response = await axios.get<Games>("http://localhost:8080/matchmaking/gameslist/");
           setGames(response.data);
         }
     
@@ -75,11 +74,9 @@ function Gamefinder(){
             <div className="row h-85 justify-content-center">
                 <div className="game-list">
                     <ul>
-                        {games.map((game) => <ListItem gameCode = {game.gameCode} noOfPlayers={game.noOfPlayers}/>)}
-                        {/*<li> <a href="game.html">gamecode1</a> </li>
-                        <li> <a href="game.html">gamecode2</a> </li>
-                        <li> <a href="game.html">gamecode3</a> </li>
-                        <li> <a href="game.html">gamecode4</a> </li>*/}
+                        {/*games.map((game) => */}<ListItem 
+                        gameCode = {games == undefined ? "-1" : games.gameCode} 
+                        noOfPlayers={games == undefined ? -1 : games.noOfPlayers}/>
                     </ul>
                 </div>
             </div>
@@ -94,7 +91,7 @@ function ListItem({gameCode, noOfPlayers} : Games) {
 async function joinGame({gameCode, noOfPlayers} : Games) : Promise<void>{
     //TODO popup to insert name. find way to go to UNO page.
     if(noOfPlayers<2){
-        await axios.put("/matchmaking/joinGame/"+gameCode+"/"/*:id*/)
+        await axios.put("/matchmaking/joinGame/"+gameCode+"/")
     }
 }
 
@@ -121,7 +118,7 @@ class GameCreator extends Component{
                                 type="text" 
                                 id="gamecode-create" 
                                 name="gamecode" 
-                                onChange={e => this.setState({ code: this.state.code, name: e.target.value })}/>
+                                onChange={e => this.setState({ code: e.target.value, name: this.state.name })}/>
                         </Form.Group>
                     </div>
                     <div className="col-6">
@@ -132,7 +129,7 @@ class GameCreator extends Component{
                                 type="text" 
                                 id="playerId" 
                                 name="playerID" 
-                                onChange={e => this.setState({ code: e.target.value, name: this.state.name })}/>
+                                onChange={e => this.setState({ code: this.state.code, name: e.target.value })}/>
                         </Form.Group>
                     </div>
                 </div>
@@ -140,7 +137,7 @@ class GameCreator extends Component{
                 <div className="row h-50 align-items-end justify-content-center">
                     <div className="col-auto">
                         <Button variant="light" 
-                                type="reset" 
+                                type="submit" 
                                 onClick={this.onPress}> Submit </Button> 
                     </div>
                 </div>
