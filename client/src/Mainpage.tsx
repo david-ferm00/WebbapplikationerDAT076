@@ -12,7 +12,6 @@ import {
     Link,
     useNavigate
   } from "react-router-dom";
-import UnoGame from './UnoGame';
 import { Prev } from 'react-bootstrap/esm/PageItem';
 
 function Mainpage(){
@@ -47,7 +46,7 @@ function Mainpage(){
 }
 
 interface Games{
-    gameCode : string,
+    code : string,
     noOfPlayers : number
 }
 
@@ -57,8 +56,8 @@ function Gamefinder(){
         name : "",
     }
 
-    const GameList = {
-        gameCode : "default",
+    const GameList : Games= {
+        code : "default",
         noOfPlayers : 0
     } 
 
@@ -67,8 +66,9 @@ function Gamefinder(){
 
     useEffect(() => {
         let interval = setInterval(async () => {
-            const res = await axios.get<Games>("http://localhost:3000/matchmaking/gamelist");
+            const res = await axios.get<Games>("http://localhost:8080/matchmaking/gamelist");
             updateGameList(res.data)
+            console.log(name.name)
         }, 2000);
         return () => {
             clearInterval(interval);
@@ -87,7 +87,7 @@ function Gamefinder(){
                                 type="text" 
                                 id="playerId" 
                                 name="playerID" 
-                                onChange={e => updateName(prev => e.target.value)}/>
+                                onChange={e => name.name=e.target.value}/>
                         </Form.Group>
                     </Form>
                 </div>
@@ -95,7 +95,7 @@ function Gamefinder(){
             <div className="row h-85 justify-content-center">
                 <div className="game-list">
                     <ul>
-                        {ListItem(state.gameCode, state.noOfPlayers, playerID.name)}
+                        {ListItem(state.code, state.noOfPlayers, name.name)}
                     </ul>
                 </div>
             </div>
@@ -104,12 +104,13 @@ function Gamefinder(){
 }
 
 function ListItem(gameCode : string, noOfPlayers : number, playerID : string) {
-    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to ="/UnoGame"> {gameCode} </Link></li>)
+    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to ={playerID=="" ? "/" : "/UnoGame/"}> {gameCode} : {noOfPlayers} </Link></li>)
 }
 
 async function joinGame(gameCode : string, noOfPlayers : number, playerID : string) : Promise<void>{
+    console.log(playerID);
     if(noOfPlayers<10){
-        await axios.put("/matchmaking/joinGame/"+gameCode+"/"+playerID)
+        await axios.put("http://localhost:8080/matchmaking/joinGame/"+gameCode+"/"+playerID)
     }
 }
 
@@ -154,9 +155,11 @@ class GameCreator extends Component{
 
                 <div className="row h-50 align-items-end justify-content-center">
                     <div className="col-auto">
-                        <Button variant="light" 
+                        <Link to ="/UnoGame">
+                        <   Button variant="light" 
                                 type="submit" 
                                 onClick={this.onPress}> Submit </Button> 
+                        </Link> 
                     </div>
                 </div>
             </Form>

@@ -12,12 +12,12 @@ import { Value } from './uno/Value';
 export function UnoGame() {
     const player_id = "You"
     const game_code = "game123"
-    
+
     const fakeCard:Card = {
         colour: Colour.red,
         value: Value.one,
         image: one_red
-    }
+}
 
     const defaultGameState:GameState = {
         yourPile: new Pile(true),
@@ -26,7 +26,7 @@ export function UnoGame() {
         sizeDrawPile: 4,
         sizeOppPile: 0,
         topCard: fakeCard
-    } 
+}
 
     const [state, updateGameState] = useState(defaultGameState)
     const [opponents, alterOpponents] = useState([""])
@@ -53,13 +53,13 @@ export function UnoGame() {
             clearInterval(interval);
         };
     }, []);
-
+    
     return (
             <>
                 <div className="text-center justify-content-center align-items-center">
                     <h1>Opponent</h1>
                     {DisplayOpponentDeck(state.sizeOppPile)}
-                </div>
+    </div>
                 <div className="text-center justify-content-center align-items-center">
                     <h1>Draw pile</h1>
                     {DisplayDrawPile(state.sizeDrawPile)}
@@ -71,7 +71,7 @@ export function UnoGame() {
             </>
     )
     
-        //hello
+
 }
 
 function CardFace (card: Card) {
@@ -84,9 +84,9 @@ function selectCard(card:Card) {
 
 function CardBack() {
     return (
-        <div className='card-back'>
-            <img src={require('./images/back.jpg')} alt={"Back of card"} />
-        </div>
+    <div className='card-back'>
+        <img src={require('./images/back.jpg')} alt={"Back of card"} />
+    </div>
         )
 } 
 

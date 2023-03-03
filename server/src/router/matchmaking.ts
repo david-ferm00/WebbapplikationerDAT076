@@ -42,6 +42,9 @@ matchmakingRouter.post("/matchmaking/creategame/:code/:id", async(req : Request,
 
 //join a game
 matchmakingRouter.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response) => {
+    if(unoService.getCode() == req.params.code){
+        unoService.setPlayerTwo(req.params.id);
+    }
     /*const game = get game from db;
     if(game already has two players){
         res.status(400).send("game full already");
