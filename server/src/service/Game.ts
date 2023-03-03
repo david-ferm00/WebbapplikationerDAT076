@@ -8,6 +8,8 @@ export interface IUnoService {
     cardFromDrawPile(player : string) : Promise<void>
     getState(requestedPlayer: string) : Promise<GameState>
     place(card: Card, player: string) : Promise<boolean>
+    getCode() : string
+    getNoOfPlayers() : number
 }
 
 export class Game implements IUnoService{
@@ -19,14 +21,14 @@ export class Game implements IUnoService{
     drawDeck : Pile;
     discardPile : Pile;
 
-    gameCode : String;
+    gameCode : string;
 
     currentPlayer : number;
 
     gameStatePlayer1 : GameState;
     gameStatePlayer2 : GameState;
 
-    constructor(code : String, player1 : String){
+    constructor(code : string, player1 : String){
         this.gameCode = code;
 
         this.handPlayer1 = new Pile(true);
@@ -124,6 +126,16 @@ export class Game implements IUnoService{
             return this.gameStatePlayer2;
         }
         throw Error("not a player");
+    }
+
+    getCode() : string{
+        return this.gameCode;
+    }
+
+    getNoOfPlayers() : number{
+        if(this.player1Name == undefined) return 0;
+        if(this.player2Name == undefined) return 1;
+        return 2;
     }
 }
 
