@@ -13,43 +13,37 @@ import {
     useNavigate
   } from "react-router-dom";
 import UnoGame from './UnoGame';
+import { Prev } from 'react-bootstrap/esm/PageItem';
 
 function Mainpage(){
     return(
         <body className="background">
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossOrigin="anonymous"></script>
-                <div className="container-fluid text-center">
-                    <div className="row h-100 justify-content-center">
-                        <div className="col-md-auto">
-                            <h1 id="title">
-                                Uno game
-                            </h1>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossOrigin="anonymous"></script>
+            <div className="container-fluid text-center">
+                <div className="row h-100 justify-content-center">
+                    <div className="col-md-auto">
+                        <h1 id="title">
+                            Uno game
+                        </h1>
 
-                            <div style={{ display: 'block', width: 700, padding: 30 }}>
-                                <Tabs defaultActiveKey="second" className='justify-content-center'>
-                                    <Tab eventKey="first" title="Create game">
-                                        <GameCreator />
-                                    </Tab>
-                                    <Tab eventKey="second" title="Join game" onClick={e => getGames()}>
-                                        <Gamefinder />
-                                    </Tab>
-                                    <Tab eventKey="third" title="Settings...">
-                                        We don have anything here yet
-                                    </Tab>
-                                </Tabs>
-                            </div>
-                            
+                        <div style={{ display: 'block', width: 700, padding: 30 }}>
+                            <Tabs defaultActiveKey="second" className='justify-content-center'>
+                                <Tab eventKey="first" title="Create game">
+                                    <GameCreator />
+                                </Tab>
+                                <Tab eventKey="second" title="Join game">
+                                    <Gamefinder />
+                                </Tab>
+                                <Tab eventKey="third" title="Settings...">
+                                    We don have anything here yet
+                                </Tab>
+                            </Tabs>
                         </div>
                     </div>
                 </div>
-                
+            </div>
         </body>
     )
-}
-
-async function getGames(){
-    const response = await axios.get<Games>("http://localhost:8080/matchmaking/gamelist/");
-    return response.data;
 }
 
 interface Games{
@@ -57,15 +51,30 @@ interface Games{
     noOfPlayers : number
 }
 
-class Gamefinder extends Component{
+function Gamefinder(){
 
-    state = {
+    const playerID = {
         name : "",
-        gameCode : "default",
-        noOfPlayers : 0
     }
 
-    render(){
+    const GameList = {
+        gameCode : "default",
+        noOfPlayers : 0
+    } 
+
+    const [state, updateGameList] = useState(GameList)
+    const [name, updateName] = useState(playerID)
+
+    useEffect(() => {
+        let interval = setInterval(async () => {
+            const res = await axios.get<Games>("http://localhost:3000/matchmaking/gamelist");
+            updateGameList(res.data)
+        }, 2000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     return (
         <div className="box">
             <div className="row h-30">
@@ -78,7 +87,7 @@ class Gamefinder extends Component{
                                 type="text" 
                                 id="playerId" 
                                 name="playerID" 
-                                onChange={e => this.setState({name: e.target.value })}/>
+                                onChange={e => updateName(prev => e.target.value)}/>
                         </Form.Group>
                     </Form>
                 </div>
@@ -86,30 +95,21 @@ class Gamefinder extends Component{
             <div className="row h-85 justify-content-center">
                 <div className="game-list">
                     <ul>
-                        <ListItem 
-                        gameCode = {this.state.gameCode} 
-                        noOfPlayers={this.state.noOfPlayers} />
+                        {ListItem(state.gameCode, state.noOfPlayers, playerID.name)}
                     </ul>
                 </div>
-                
             </div>
         </div>
-    );}
-
+    );
 }
 
-
-
-function ListItem({gameCode, noOfPlayers} : Games, playerID : string) {
-    return(<li onClick={e => joinGame({gameCode, noOfPlayers})}><Link to ="/UnoGame"> {gameCode} </Link></li>)
+function ListItem(gameCode : string, noOfPlayers : number, playerID : string) {
+    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to ="/UnoGame"> {gameCode} </Link></li>)
 }
 
-async function joinGame({gameCode, noOfPlayers} : Games) : Promise<void>{
-    //const navigate = useNavigate();
-    //TODO popup to insert name. find way to go to UNO page.
+async function joinGame(gameCode : string, noOfPlayers : number, playerID : string) : Promise<void>{
     if(noOfPlayers<10){
-        //navigate("/UnoGame");
-        await axios.put("/matchmaking/joinGame/"+gameCode+"/")
+        await axios.put("/matchmaking/joinGame/"+gameCode+"/"+playerID)
     }
 }
 

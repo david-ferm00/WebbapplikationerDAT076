@@ -17,7 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Mainpage />}/>
-        <Route path='/UnoGame' element={<UnoGame />}/>
+        <Route path='/UnoGame/' element={<UnoGame />}/>
       </Routes>
     </Router>
 
