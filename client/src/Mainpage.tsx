@@ -104,7 +104,7 @@ function Gamefinder(){
 }
 
 function ListItem(gameCode : string, noOfPlayers : number, playerID : string) {
-    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to ={playerID=="" ? "/" : "/UnoGame/"}> {gameCode} : {noOfPlayers} </Link></li>)
+    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to={'unoGame/'+gameCode+"/"+playerID}> {gameCode} </Link></li>)
 }
 
 async function joinGame(gameCode : string, noOfPlayers : number, playerID : string) : Promise<void>{
