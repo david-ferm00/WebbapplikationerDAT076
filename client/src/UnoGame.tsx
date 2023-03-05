@@ -7,6 +7,7 @@ import { Pile } from './uno/Pile';
 import { Card } from './uno/card';
 import { Colour } from './uno/Colour';
 import { Value } from './uno/Value';
+import { Col, Row } from 'react-bootstrap';
 
 //export function UnoGame(props:{player_id:string, game_id:string}) {
 export function UnoGame() {
@@ -17,7 +18,7 @@ export function UnoGame() {
         colour: Colour.red,
         value: Value.one,
         image: one_red
-}
+    }
 
     const defaultGameState:GameState = {
         yourPile: new Pile(true),
@@ -26,7 +27,7 @@ export function UnoGame() {
         sizeDrawPile: 4,
         sizeOppPile: 0,
         topCard: fakeCard
-}
+    }
 
     const [state, updateGameState] = useState(defaultGameState)
     const [opponents, alterOpponents] = useState([""])
@@ -44,7 +45,7 @@ export function UnoGame() {
     useEffect(() => {
         let interval = setInterval(async (player_id : string, game_code : string) => {
             //const res = await axios.get<GameState>("http://localhost:3000/game_state", {params: {id: player_id, game_code: game_code}});
-            const res = await axios.get<GameState>("http://localhost:3000/game_state", {params: {id: player_id}});
+            const res = await axios.get<GameState>("http://localhost:8080/game_state", {params: {id: player_id}});
             console.log(res.data)
             updateGameState(res.data)
         }, 2000);
@@ -55,27 +56,31 @@ export function UnoGame() {
     }, []);
     
     return (
-            <>
-                <div className="text-center justify-content-center align-items-center">
-                    <h1>Opponent</h1>
-                    {DisplayOpponentDeck(state.sizeOppPile)}
-    </div>
-                <div className="text-center justify-content-center align-items-center">
-                    <h1>Draw pile</h1>
-                    {DisplayDrawPile(state.sizeDrawPile)}
-                </div>
-                <div className="text-center justify-content-center align-items-center">
-                    <h1>{player_id}</h1>
-                    {DisplayYourDeck(state.yourPile)}
-                </div>
-            </>
+        <body className="background">
+            <Row className="text-center justify-content-center align-items-center">
+                <h1>Opponent</h1>
+                {DisplayOpponentDeck(state.sizeOppPile)}
+            </Row>
+            <Row className="text-center justify-content-center align-items-center">
+                <h1>Draw pile</h1>
+                {DisplayDrawPile(state.sizeDrawPile)}
+            </Row>
+            <Row className="text-center justify-content-center align-items-center">
+                <h1>{player_id}</h1>
+                {DisplayYourDeck(state.yourPile)}
+            </Row>
+        </body>
     )
     
 
 }
 
 function CardFace (card: Card) {
-    return <img src={require(card.image)} alt={"Value: " + card.colour + " Colour: " + card.colour} onClick={() => selectCard(card)} />
+    return(
+        <div className="card-front">
+            <img src={require("./images/"+card.image+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard(card)} />
+        </div>
+    )
 }
 
 function selectCard(card:Card) {
@@ -102,30 +107,37 @@ function DisplayOpponentDeck (size : number) {
         alterNumberOfCards(prev => prev.slice(1))
     }
 
-    return <div className='opponent-hand'>
+    return( <div className='opponent-hand'>
         <Button onClick={addCard}> Add card</Button>
         <Button onClick={removeCard}> Remove card</Button>
-        {
-            cards.map(() => (
-                <CardBack/>
-            ))
-        }
+        <Row>
+            <Col md={3}></Col>
+            <Col md={6}>
+                <Row>
+                    {
+                        cards.map(() => (
+                        <Col className="md-auto"><CardBack/></Col>
+                        ))
+                    }
+                </Row>
+            </Col>
+            
+            <Col md={3}></Col>
+        </Row>
         
-    </div>
+        
+    </div>)
 }
 
 function DisplayYourDeck (pile : Pile) {
     const [cards, alterNumberOfCards] = useState<Pile>(pile);
 
-    function addCard(card:Card): void{
+    function addCard(card:Card){
         alterNumberOfCards(prev => prev.addCard(card))
-        
     }
 
-    function removeCard(card:Card): void{
-        if (pile.contains(card)) {
-            alterNumberOfCards(prev => prev.remove(card))
-        }
+    function removeCard(card:Card){
+        alterNumberOfCards(prev => prev.remove(card))      
     }
 
     // function removeCard(card:Card){
@@ -137,18 +149,29 @@ function DisplayYourDeck (pile : Pile) {
     const fakeCard:Card = {
         colour: Colour.red,
         value: Value.one,
-        image: one_red
+        image: "one_red"
     }
 
-    return <div className='your-hand'>
-        <Button onClick={() => addCard(fakeCard)}> Add card</Button>
-        <Button onClick={() => removeCard(cards[1])}> Remove card</Button>
-        {
-            cards.map((card:Card) => (
-                <CardFace colour={card.colour} value={card.value} image={card.image} />
-            ))
-        }
-    </div>
+    return( <div className='your-hand'>
+    <Button onClick={() => addCard(fakeCard)}> Add card</Button>
+    <Button onClick={() => removeCard(cards.pickTopCard())}> Remove card</Button>
+    <Row>
+        <Col md={3}></Col>
+        <Col md={6}>
+            <Row>
+                {
+                    cards.pile.map((card:Card) => (
+                    <Col className="md-auto"><CardFace colour={card.colour} value={card.value} image={card.image}/></Col>
+                    ))
+                }
+            </Row>
+        </Col>
+        
+        <Col md={3}></Col>
+    </Row>
+
+
+    </div>)
 }
 
 function DisplayDrawPile(size:number) {
