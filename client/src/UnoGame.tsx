@@ -8,9 +8,16 @@ import { Card } from './uno/card';
 import { Colour } from './uno/Colour';
 import { Value } from './uno/Value';
 import { Col, Row } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
+
+interface details{
+    gameCode : string,
+    playerID : string
+}
 //export function UnoGame(props:{player_id:string, game_id:string}) {
 export function UnoGame() {
+    var details = useParams()
     const player_id = "You"
     const game_code = "game123"
 
