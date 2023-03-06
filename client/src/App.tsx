@@ -19,7 +19,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Mainpage />}/>
-        <Route path='/UnoGame' handle={Start}/>
+        <Route path='/UnoGame' handle={Start} element={<UnoGame/>}/>
       </Routes>
     </Router>
 
@@ -36,7 +36,7 @@ function App() {
     if(typeof(gameCode) === undefined) {
       throw new Error("gameCode is undefined")
     }
-    UnoGame({player_id:"player_id", game_id:"gameCode"})
+    //UnoGame({player_id:"player_id", game_id:"gameCode"})
   }
 }
 
