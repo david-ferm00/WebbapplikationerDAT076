@@ -20,7 +20,9 @@ interface details{
 //make the game winnable (what happens when win)
 //make the player able to pick a colour when that happens
 //correct calling uno logic. with timings and that
-//making game server side sets player1 name to 1 regardless
+//unsure on placing cards how parameters work there
+//doesn't show enemy cards. because it is an empty list?
+//draw pile needs to update game. otherwise it gets it at the start i guess?
 export function UnoGame() {
     var details = useParams()
 
@@ -56,7 +58,7 @@ export function UnoGame() {
         <body className="background">
             <Row className="text-center justify-content-center align-items-center">
                 <h1>Opponent</h1>
-                {DisplayOpponentDeck(game.gameState.sizeOppPile)}
+                {DisplayOpponentDeck(game)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">
                 <h1>Draw pile</h1>
@@ -115,11 +117,12 @@ function CardBack() {
         )
 } 
 
-function DisplayOpponentDeck (size : number) {
-    const [cards, alterNumberOfCards] = useState<number[]>(Array(size));
+function DisplayOpponentDeck (game:Game) {
+    const [cards, alterNumberOfCards] = useState<number[]>(Array(game.gameState.sizeOppPile));
     
     function addCard(){
         alterNumberOfCards(prev => prev.concat(1))
+        console.log(cards)
     }
 
     function removeCard(){
@@ -128,8 +131,10 @@ function DisplayOpponentDeck (size : number) {
 
     useEffect(() => {
         let interval = setInterval(async () => {
-            alterNumberOfCards(() => Array(size))
-        }, 100);
+            alterNumberOfCards(Array(game.gameState.sizeOppPile))
+            //console.log(game.gameState.sizeOppPile);
+            //console.log(cards);
+        }, 2000);
         return () => {
             clearInterval(interval);
         };
@@ -170,7 +175,7 @@ function DisplayYourDeck (game : Game) {
     const [topCard, changeTopCard] = useState<Card>(fakeCard);
     
     useEffect(() => {
-        let interval = setInterval(async () => {
+        let interval = setInterval(() => {
             alterNumberOfCards(game.gameState.yourPile)
             changeTurn(game.gameState.yourTurn)
             changeTopCard(game.gameState.topCard)
@@ -201,23 +206,6 @@ function DisplayYourDeck (game : Game) {
 }
 
 function DisplayDrawPile(game:Game) {
-    //const cards:number[] = Array(size)
-    // if (size > 5) {
-    //     return (
-    //         {CardBack}
-    //     )
-    // } else {
-    //     const cards:number[] = Array(size)
-    //      return (
-    //         <div className='draw-pile'>
-    //             {
-    //                 cards.map(() => (
-    //                     <CardBack/>
-    //                 ))
-    //             }
-    //         </div>
-    //     )
-    // }
 
     const fakeCard:Card = {
         colour: Colour.red,
@@ -230,7 +218,7 @@ function DisplayDrawPile(game:Game) {
             <Row className="justify-content-md-center">
                 <Col md="auto">
                     <Row>
-                        <Col onClick={() => console.log(game.gameState)}>{DrawPile(game)}</Col>
+                        <Col onClick={() => console.log(game)}>{DrawPile(game)}</Col>
                         <Col>{UnoButton(game)}</Col>
                         <Col>{CardFace(game.gameState.topCard, false, game.gameState.topCard, false, "", "")}</Col>
                     </Row>

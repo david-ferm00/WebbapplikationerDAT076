@@ -49,11 +49,9 @@ export class Game implements IUnoService{
         }
         this.discardPile.addCard(this.drawDeck.pickTopCard());
 
-        this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, 
-            this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard());
-        this.gameStatePlayer2 = new GameState(this.handPlayer2, this.currentPlayer==2 ? true:false, 
-            this.discardPile.size(), this.drawDeck.size(), this.handPlayer1.size(), this.discardPile.seeTopCard());
-
+        this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard());
+        this.gameStatePlayer2 = new GameState(this.handPlayer2, this.currentPlayer==2 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer1.size(), this.discardPile.seeTopCard());
+        
         this.player1Name = player1;
         this.player2Name = "";
     }
@@ -148,8 +146,6 @@ export class Game implements IUnoService{
     }
 
     getState(requestedPlayer : string) : GameState{
-        console.log(requestedPlayer);
-        console.log(this.player1Name);
         if(requestedPlayer==this.player1Name){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer1.sizeGamePile = this.discardPile.size();

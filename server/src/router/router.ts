@@ -9,7 +9,7 @@ import { GameState } from "../model/GameState"
 
 export const router = express.Router();
 
-var unoService : IUnoService = instantiateUnoService("-1","hello");
+var unoService : IUnoService;
 
 interface GamelistItem{
     code : string,
@@ -17,7 +17,7 @@ interface GamelistItem{
 }
 
 router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
-    const gamelist : GamelistItem = {code : unoService.getCode()===undefined ? "" : unoService.getCode(), noOfPlayers : unoService.getNoOfPlayers()}
+    const gamelist : GamelistItem = {code : unoService===undefined ? "" : unoService.getCode(), noOfPlayers : unoService===undefined ? 0 : unoService.getNoOfPlayers()}
     res.status(200).send(gamelist)
 });
 
