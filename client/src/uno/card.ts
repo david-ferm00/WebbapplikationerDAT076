@@ -9,6 +9,6 @@ export class Card {
     constructor(colour: Colour, value: Value) {
         this.colour = colour;
         this.value = value;
-        this.image = "one_red";
+        this.image = "1_red";
     }
 }
