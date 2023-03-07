@@ -20,6 +20,7 @@ interface details{
 //make the game winnable (what happens when win)
 //make the player able to pick a colour when that happens
 //correct calling uno logic. with timings and that
+//making game server side sets player1 name to 1 regardless
 export function UnoGame() {
     var details = useParams()
 
@@ -72,8 +73,9 @@ export function UnoGame() {
 }
 
 function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolean, id : string, code : string) {
+    const imageName = getImageName(card);
+
     async function selectCard(){
-        console.log(code)
         if(hand && yourTurn && (topCard.colour==card.colour || topCard.value==card.value)){
             await axios.put("http://localhost:8080/uno/select_card/"+code+"/"+id, {card : card});
         }
@@ -81,9 +83,28 @@ function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolea
 
     return(
         <div className="card-front">
-            <img src={require("./images/"+"1_red"+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
+            <img src={require("./images/"+imageName+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
         </div>
     )
+}
+
+function getImageName(card: Card) : string{
+    var result = ""
+    switch(card.value){
+        case 10: result = result+"+2"; break;
+        case 11: result = result+"+4"; break;
+        case 12: result = result+"free_choice"; break;
+        default: result = result+card.value.toString(); break;
+    }
+    switch(card.colour){
+        case 0: result = result+"_red"; break;
+        case 1: result = result+"_yellow"; break;
+        case 2: result = result+"_blue"; break;
+        case 3: result = result+"_green"; break;
+        default: break;
+    }
+
+    return result;
 }
 
 function CardBack() {

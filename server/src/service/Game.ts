@@ -148,6 +148,8 @@ export class Game implements IUnoService{
     }
 
     getState(requestedPlayer : string) : GameState{
+        console.log(requestedPlayer);
+        console.log(this.player1Name);
         if(requestedPlayer==this.player1Name){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer1.sizeGamePile = this.discardPile.size();
@@ -201,5 +203,6 @@ export class Game implements IUnoService{
 
 
 export function instantiateUnoService(code: string, playerName: string) : IUnoService {
+    console.log(playerName);
     return new Game(code, playerName); 
 }

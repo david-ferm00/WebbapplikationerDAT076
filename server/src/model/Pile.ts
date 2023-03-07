@@ -14,7 +14,7 @@ export class Pile{
     generateNewPile(): Array<Card> {
         let result = [];
         for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 12; j++) {
+            for (let j = 0; j < 10; j++) {
                 result.push(new Card(i,j));
                 if(j!=0){
                     result.push(new Card(i,j));
@@ -24,7 +24,7 @@ export class Pile{
 
         for (let index = 0; index < 2; index++) {
             for (let j = 0; j < 4; j++) {
-                result.push(new Card(4, index+13));
+                result.push(new Card(4, index+11));
             }
             
         }
