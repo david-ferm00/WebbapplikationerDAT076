@@ -1,20 +1,41 @@
 import express from "express";
 import { Request, Response } from "express";
+import { instantiateUnoService } from "../service/Game";
+import { IUnoService } from "../service/Game";
 import { Card } from "../model/card";
 import { Colour } from "../model/Colour";
-import { instantiateUnoService, IUnoService } from "../service/Game";
-import { GameState } from "../model/GameState";
+import { GameState } from "../model/GameState"
 
-export const unoRouter = express.Router();
 
-const unoService = instantiateUnoService("tbd", "1");
+export const router = express.Router();
 
-unoRouter.get("/uno", async (req: Request, res: Response) => {    
-    res.status(200).send("It works!");
+var unoService : IUnoService = instantiateUnoService("-1","hello");
+
+interface GamelistItem{
+    code : string,
+    noOfPlayers : number
+}
+
+router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
+    const gamelist : GamelistItem = {code : unoService.getCode()===undefined ? "" : unoService.getCode(), noOfPlayers : unoService.getNoOfPlayers()}
+    res.status(200).send(gamelist)
 });
 
-unoRouter.get("/uno/game_state/:id", async (req: Request, res: Response<GameState>) => {
-    //const unoService : IUnoService = getUnoServices();
+//create a game
+router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
+    unoService = instantiateUnoService(req.params.code, req.params.id);
+    res.status(200)
+});
+
+//join a game
+router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response) => {
+    if(unoService.getCode() == req.params.code){
+        unoService.setPlayerTwo(req.params.id);
+    }
+});
+
+//give the client the state of the game
+router.get("/uno/game_state/:id", async (req: Request, res: Response<GameState>) => {
     try {
         const gameState : GameState = unoService.getState(req.params.id);
         res.status(200).send(gameState);
@@ -23,8 +44,8 @@ unoRouter.get("/uno/game_state/:id", async (req: Request, res: Response<GameStat
     }
 });
 
-unoRouter.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
-    //const unoService = getUnoServices();
+//give the player a card from the draw deck
+router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     try{
         unoService.cardFromDrawPile(req.params.id);
         res.status(200).send("Works")
@@ -33,23 +54,22 @@ unoRouter.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =
     }
 });
 
-unoRouter.put("/uno/select_card/:code/:id", async (
+//unsure on having params and body
+//places a card from the players hand
+router.put("/uno/select_card/:code/:id", async (
     req: Request<{card:Card}>,
     res: Response<Card | string>
 ) => {
     try {
-        //const unoService = getUnoServices();
         const player = req.body.id;
         const card:Card = req.params.card;
-        console.log("type of request body: " + typeof(req.body))
-        console.log("type of player: " + typeof(player))
-        /*if (typeof(player) !== "string") {
+        if (typeof(player) !== "string") {
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
         }
         if (typeof(req.body.card) !== typeof(Card)) {
             res.status(500).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
-        }*/
+        }
         unoService.place(card, player);
         res.status(200).send("Card placed");
 
@@ -58,7 +78,8 @@ unoRouter.put("/uno/select_card/:code/:id", async (
     }
 });
 
-unoRouter.put("/uno/select_color", async (
+//select colour when such a card is placed
+router.put("/uno/select_color", async (
     req: Request<{player_name : string , colour : Colour}>,
     res: Response<Colour | string>
 ) => {
@@ -80,7 +101,8 @@ unoRouter.put("/uno/select_color", async (
     }
 });
 
-unoRouter.put("/uno/say_uno/:code/:id", async (
+//when the uno button is pressed
+router.put("/uno/say_uno/:code/:id", async (
     req: Request,
     res: Response<string>
 ) => {
@@ -96,7 +118,3 @@ unoRouter.put("/uno/say_uno/:code/:id", async (
         res.status(500).send(e.message)
     }
 });
-
-
-// We want the clients to get specific information based on who is asking
-

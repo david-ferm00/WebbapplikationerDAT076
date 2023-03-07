@@ -16,11 +16,12 @@ interface details{
     gameCode : string,
     playerID : string
 }
-//export function UnoGame(props:{player_id:string, game_id:string}) {
+
+//make the game winnable (what happens when win)
+//make the player able to pick a colour when that happens
+//correct calling uno logic. with timings and that
 export function UnoGame() {
     var details = useParams()
-    const player_id = "You"
-    const game_code = "game123"
 
     
     const fakeCard:Card = {
@@ -42,11 +43,9 @@ export function UnoGame() {
 
     useEffect(() => {
         let interval = setInterval(async (player_id : string, game_code : string) => {
-            //const res = await axios.get<GameState>("http://localhost:3000/game_state", {params: {id: player_id, game_code: game_code}});
             const res = await axios.get<GameState>("http://localhost:8080/uno/game_state/"+game.player1Name);
             game.updateGameState(res.data);
         }, 2000);
-        // remove the interval when the component is unmounted
         return () => {
             clearInterval(interval);
         };
@@ -63,7 +62,7 @@ export function UnoGame() {
                 {DisplayDrawPile(game)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">
-                <h1>{player_id}</h1>
+                <h1>{game.player1Name}</h1>
                 {DisplayYourDeck(game)}
             </Row>
         </body>
@@ -95,7 +94,6 @@ function CardBack() {
         )
 } 
 
-
 function DisplayOpponentDeck (size : number) {
     const [cards, alterNumberOfCards] = useState<number[]>(Array(size));
     
@@ -106,6 +104,15 @@ function DisplayOpponentDeck (size : number) {
     function removeCard(){
         alterNumberOfCards(prev => prev.slice(1))
     }
+
+    useEffect(() => {
+        let interval = setInterval(async () => {
+            alterNumberOfCards(() => Array(size))
+        }, 100);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
     return( <div className='opponent-hand'>
         <Button onClick={addCard}> Add card</Button>
@@ -130,7 +137,6 @@ function DisplayOpponentDeck (size : number) {
 }
 
 function DisplayYourDeck (game : Game) {
-    //make this view update when drawdeck is clicked
     const fakeCard:Card = {
         colour: Colour.red,
         value: Value.one,
@@ -142,15 +148,14 @@ function DisplayYourDeck (game : Game) {
     const [yourTurn, changeTurn] = useState<boolean>(false);
     const [topCard, changeTopCard] = useState<Card>(fakeCard);
     
-
     useEffect(() => {
-        let interval = setInterval(async (player_id : string, game_code : string) => {
+        let interval = setInterval(async () => {
             alterNumberOfCards(game.gameState.yourPile)
             changeTurn(game.gameState.yourTurn)
             changeTopCard(game.gameState.topCard)
             changeID(game.player1Name)
             changeCode(game.gameCode)
-        }, 2000);
+        }, 100);
         return () => {
             clearInterval(interval);
         };
