@@ -6,9 +6,9 @@ export class Card {
     value : Value;
     image : string
 
-    constructor(colour: Colour, value: Value, image: string) {
+    constructor(colour: Colour, value: Value) {
         this.colour = colour;
         this.value = value;
-        this.image = image;
+        this.image = "one_red";
     }
 }

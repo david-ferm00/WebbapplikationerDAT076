@@ -53,3 +53,7 @@ matchmakingRouter.put("/matchmaking/joinGame/:code/:id", async(req : Request, re
         res.status(200).send("you may request gamestate")
     }*/
 });
+
+export function getUnoServices() : IUnoService{
+    return unoService;
+}

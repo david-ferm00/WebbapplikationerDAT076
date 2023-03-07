@@ -10,8 +10,6 @@ export enum Value{
     eight,
     nine,
     plus_two,
-    reverse,
-    block,
     plus_four,
     colour
 }

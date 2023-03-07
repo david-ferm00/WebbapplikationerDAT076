@@ -6,16 +6,17 @@ export interface IUnoService {
     // define methods to inferface with the router layer
 
     cardFromDrawPile(player : string) : Promise<void>
-    getState(requestedPlayer: string) : Promise<GameState>
-    place(card: Card, player: string) : Promise<boolean>
+    getState(requestedPlayer : string) : GameState
+    place(card: Card, player: string) : boolean
     getCode() : string
     getNoOfPlayers() : number
     setPlayerTwo(id : string) : void
+    sayUno(player : string) : void
 }
 
 export class Game implements IUnoService{
-    player1Name : String;
-    player2Name : String;
+    player1Name : string;
+    player2Name : string;
 
     handPlayer1: Pile;
     handPlayer2 : Pile;
@@ -29,7 +30,9 @@ export class Game implements IUnoService{
     gameStatePlayer1 : GameState;
     gameStatePlayer2 : GameState;
 
-    constructor(code : string, player1 : String){
+    uno : boolean = false;
+
+    constructor(code : string, player1 : string){
         this.gameCode = code;
 
         this.handPlayer1 = new Pile(true);
@@ -79,11 +82,11 @@ export class Game implements IUnoService{
     }
 
     async cardFromDrawPile(player: string) : Promise<void>{
-        switch(player){
-            case this.player1Name: this.handPlayer1.addCard(this.drawDeck.pickTopCard());
-            case this.player2Name: this.handPlayer1.addCard(this.drawDeck.pickTopCard());
-            default: break;
-        }
+        //switch(player){
+            /*case this.player1Name: */this.handPlayer1.addCard(this.drawDeck.pickTopCard());
+            /*case this.player2Name: */this.handPlayer2.addCard(this.drawDeck.pickTopCard());
+            //default: break;
+        //}
     }
 
     handSize(player: number) : number{
@@ -95,38 +98,72 @@ export class Game implements IUnoService{
         return 0;
     }
 
-    async place(card: Card, player: String) : Promise<boolean>{
-        if(player == this.player1Name){
+    place(card: Card, player: String) : boolean{
+        if(player == this.player1Name && this.whoseTurn()==1){
             if(this.handPlayer1.remove(card)){
                 this.discardPile.addCard(card);
+                this.switchPlayer();
+
+                if(this.handPlayer1.size()==1){
+                    this.uno = false;
+                    var counter = 2
+                    let intervalId = setInterval(() => {
+                        counter = counter - 1;
+                        if(counter === 0 && !this.uno) this.falseUno(1);
+                    }, 1000)
+                }
+
+                if(card.value==10 || card.value==11){
+                    for (let index = 0; index < (card.value-9)*2; index++) {
+                        this.cardFromDrawPile(this.player2Name)
+                    }
+                }
+                
                 return true;
             }
-        } else if(player == this.player2Name){
+        } else if(player == this.player2Name && this.whoseTurn()==2){
             if(this.handPlayer2.remove(card)){
                 this.discardPile.addCard(card);
+                this.switchPlayer();
+                
+                if(this.handPlayer2.size()==1){
+                    this.uno = false;
+                    var counter = 2
+                    let intervalId = setInterval(() => {
+                        counter = counter - 1;
+                        if(counter === 0 && !this.uno) this.falseUno(2);
+                    }, 1000)
+                }
+                
+                if(card.value==10 || card.value==11){
+                    for (let index = 0; index < (card.value-9)*2; index++) {
+                        this.cardFromDrawPile(this.player1Name)
+                    }
+                }
+
                 return true;
             }
         }
         return false;
     }
 
-    async getState(requestedPlayer: String) : Promise<GameState>{
-        if(requestedPlayer==this.player1Name){
+    getState(requestedPlayer : string) : GameState{
+        //if(requestedPlayer==this.player1Name){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer1.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer1.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer1.yourPile = this.handPlayer1;
             this.gameStatePlayer1.yourTurn = this.currentPlayer==1 ? true:false;
             return this.gameStatePlayer1;
-        } else if(requestedPlayer==this.player2Name){
+        //} else if(requestedPlayer==this.player2Name){
             this.gameStatePlayer2.sizeDrawPile = this.drawDeck.size();
             this.gameStatePlayer2.sizeGamePile = this.discardPile.size();
             this.gameStatePlayer2.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer2.yourPile = this.handPlayer2;
             this.gameStatePlayer2.yourTurn = this.currentPlayer==2 ? true:false;
             return this.gameStatePlayer2;
-        }
-        throw Error("not a player");
+        //}
+        //throw Error("not a player");
     }
 
     getCode() : string{
@@ -142,7 +179,26 @@ export class Game implements IUnoService{
     setPlayerTwo(id: string): void {
         this.player2Name = id;
     }
+
+    sayUno(player : string) : void{
+        //switch(player){
+            /*case this.player1Name:*/ this.handPlayer1.size()>1  ? this.falseUno(1) : this.uno = true;
+            //case this.player2Name: this.handPlayer2.size()>1  ? this.falseUno(2) : this.uno = true;
+        //}
+    }
+
+    falseUno(player : number){
+        if(player==1){
+            this.cardFromDrawPile(this.player1Name);
+            this.cardFromDrawPile(this.player1Name);
+        }
+        if(player==2){
+            this.cardFromDrawPile(this.player2Name);
+            this.cardFromDrawPile(this.player2Name);
+        }
+    }
 }
+
 
 export function instantiateUnoService(code: string, playerName: string) : IUnoService {
     return new Game(code, playerName); 

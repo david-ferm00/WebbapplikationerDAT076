@@ -104,12 +104,11 @@ function Gamefinder(){
 }
 
 function ListItem(gameCode : string, noOfPlayers : number, playerID : string) {
-    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to={'unoGame/'+gameCode+"/"+playerID}> {gameCode} </Link></li>)
+    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to={playerID=="" ? "/" : 'unoGame/'+gameCode+"/"+playerID}> {gameCode} </Link></li>)
 }
 
 async function joinGame(gameCode : string, noOfPlayers : number, playerID : string) : Promise<void>{
-    console.log(playerID);
-    if(noOfPlayers<10){
+    if(noOfPlayers<2){
         await axios.put("http://localhost:8080/matchmaking/joinGame/"+gameCode+"/"+playerID)
     }
 }
@@ -155,7 +154,7 @@ class GameCreator extends Component{
 
                 <div className="row h-50 align-items-end justify-content-center">
                     <div className="col-auto">
-                        <Link to ="/UnoGame">
+                        <Link to ={"/UnoGame/"+this.state.code+"/"+this.state.name}>
                         <   Button variant="light" 
                                 type="submit" 
                                 onClick={this.onPress}> Submit </Button> 
