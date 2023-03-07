@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ReactElement, useEffect, useState } from 'react';
-import one_red from './images/one_red.jpg'
+import one_red from './images/1_red.jpg'
 import { GameState } from './uno/GameState'
 import Button from 'react-bootstrap/Button'
 import { Pile } from './uno/Pile';
@@ -82,7 +82,7 @@ function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolea
 
     return(
         <div className="card-front">
-            <img src={require("./images/"+"one_red"+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
+            <img src={require("./images/"+"1_red"+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
         </div>
     )
 }
