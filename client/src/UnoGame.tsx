@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { ReactElement, useEffect, useState } from 'react';
-import one_red from './images/1_red.jpg'
+import { useEffect, useState } from 'react';
 import { GameState } from './uno/GameState'
 import Button from 'react-bootstrap/Button'
 import { Pile } from './uno/Pile';
@@ -8,8 +7,7 @@ import { Card } from './uno/card';
 import { Colour } from './uno/Colour';
 import { Value } from './uno/Value';
 import { Col, Row } from 'react-bootstrap';
-import { redirect, useParams } from 'react-router-dom';
-import { Game } from './uno/Game';
+import { useParams } from 'react-router-dom';
 import SelectColor from './SelectColor';
 
 //make the player able to pick a colour when that happens
@@ -61,8 +59,8 @@ export function UnoGame() {
                 {DisplayYourDeck(gameState, playerName, gameCode)}
             </Row>
             <Row className="justify-content-center">
-                <SelectColor/>
                 {WinCard(gameState)}
+                <SelectColor/>
             </Row>
         </body>
     )
@@ -70,11 +68,11 @@ export function UnoGame() {
 
 function WinCard(gameState: GameState){
     var message = "";
-    if(gameState.yourPile.pile.length==0){
+    if(gameState.yourPile.pile.length===0){
         return(
             message = "you win!!!"
         )
-    } else if(gameState.sizeOppPile==0){
+    } else if(gameState.sizeOppPile===0){
         return(
             message = "you lose!!!"
         )
@@ -88,9 +86,9 @@ function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolea
     const imageName = getImageName(card);
 
     async function selectCard(){
-        if((hand && yourTurn && (topCard.colour==card.colour || topCard.value==card.value)) || card.colour==4){
+        if((hand && yourTurn && (topCard.colour===card.colour || topCard.value===card.value)) || card.colour===4){
             var cardToSend;
-            if(card.colour==4){
+            if(card.colour===4){
                 cardToSend=new Card(1, card.value);
             }else{
                 cardToSend=card;
@@ -114,7 +112,7 @@ function getImageName(card: Card) : string{
         case 12: result = result+"free_choice"; break;
         default: result = result+card.value.toString(); break;
     }
-    if(card.value!=11 && card.value!=12){
+    if(card.value!==11 && card.value!==12){
         switch(card.colour){
             case 0: result = result+"_red"; break;
             case 1: result = result+"_yellow"; break;
@@ -228,7 +226,7 @@ function DrawPile(gameState : GameState, gameCode : string, player1Name : string
 function checkPile(gameState: GameState) :  boolean{
     var bool = true;
     gameState.yourPile.pile.forEach(card => {
-        if(card.value == gameState.topCard.value || card.colour == gameState.topCard.colour || card.colour==4){
+        if(card.value === gameState.topCard.value || card.colour === gameState.topCard.colour || card.colour===4){
             bool = false;
         }
     });

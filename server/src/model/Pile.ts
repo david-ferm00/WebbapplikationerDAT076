@@ -1,3 +1,4 @@
+import CardHeader from 'react-bootstrap/esm/CardHeader';
 import {Card} from './card';
 
 export class Pile{
@@ -14,7 +15,7 @@ export class Pile{
     generateNewPile(): Array<Card> {
         let result = [];
         for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 10; j++) {
+            for (let j = 0; j < 11; j++) {
                 result.push(new Card(i,j));
                 if(j!=0){
                     result.push(new Card(i,j));
@@ -87,7 +88,7 @@ export class Pile{
     includes(card: Card) : boolean{
         var bool = false;
         this.pile.forEach(element => {
-            if(card.colour == element.colour && card.value == card.value){
+            if(card.colour == element.colour && card.value == element.value){
                 bool = true;
             }
         });

@@ -97,9 +97,13 @@ export class Game implements IUnoService{
     }
 
     place(card: Card, player: String) : boolean{
+        var actualCard = card;
+        if(card.value==11 || card.value==12){
+            actualCard = new Card(4, card.value);
+        }
         if(player == this.player1Name && this.whoseTurn()==1){
-            if(this.handPlayer1.includes(card)){
-                this.handPlayer1.remove(card);
+            if(this.handPlayer1.includes(actualCard)){
+                this.handPlayer1.remove(actualCard);
                 this.discardPile.addCard(card);
                 this.switchPlayer();
                 
@@ -121,8 +125,8 @@ export class Game implements IUnoService{
                 return true;
             }
         } else if(player == this.player2Name && this.whoseTurn()==2){
-            if(this.handPlayer2.includes(card)){
-                this.handPlayer2.remove(card);
+            if(this.handPlayer2.includes(actualCard)){
+                this.handPlayer2.remove(actualCard);
                 this.discardPile.addCard(card);
                 this.switchPlayer();
                 
