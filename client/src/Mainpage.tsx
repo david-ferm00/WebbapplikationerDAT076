@@ -76,7 +76,7 @@ function Gamefinder(){
 
     return (
         <div className="box">
-            <div className="row h-30">
+            <div className="row h-30 p-3">
                 <div className="col-6" id="code-input">
                     <Form>
                         <Form.Group>
@@ -91,7 +91,7 @@ function Gamefinder(){
                     </Form>
                 </div>
             </div>
-            <div className="row h-85 justify-content-center">
+            <div className="row h-85 justify-content-center p-3">
                 <div className="game-list">
                     <ul>
                         {ListItem(state.code, state.noOfPlayers, name.name)}
@@ -126,7 +126,7 @@ class GameCreator extends Component{
     return (
         <div className="box">
             <Form>
-                <div className="row h-50">
+                <div className="row h-50 p-3">
                     <div className="col-6">
                         <Form.Group>
                             <Form.Label htmlFor="gamecode-create">Gamecode:</Form.Label>
@@ -151,7 +151,7 @@ class GameCreator extends Component{
                     </div>
                 </div>
 
-                <div className="row h-50 align-items-center justify-content-center">
+                <div className="row h-50 align-items-center justify-content-center p-3">
                     <div className="col-auto">
                         <Link to ={"/UnoGame/"+this.state.code+"/"+this.state.name}>
                         <   Button variant="light" 

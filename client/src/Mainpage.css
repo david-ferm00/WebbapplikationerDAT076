@@ -26,7 +26,7 @@
     border-color: black;
     background-color: gray;
     margin-top: 5%;
-    padding: 3em;
+    padding: 1em;
 }
 
 html, body {
@@ -40,4 +40,8 @@ html, body {
     border-width: 3px;
     background-color: white;
     margin-top: 5%;
+}
+
+.button-css{
+    padding: 1em;
 }
