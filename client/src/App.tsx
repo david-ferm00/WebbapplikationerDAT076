@@ -21,8 +21,6 @@ function App() {
         <Route path='/UnoGame/:gameCode/:id' element={<UnoGame />}/>
       </Routes>
     </Router>
-
-    
   );
 }
 

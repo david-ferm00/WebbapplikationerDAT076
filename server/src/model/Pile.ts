@@ -71,11 +71,23 @@ export class Pile{
         return this.pile.length;
     }
 
-    remove(card: Card) : boolean{
-        if(this.pile.indexOf(card) > -1){
-            this.pile.splice(this.pile.indexOf(card), 1);
-            return true;
-        }
-        return false;
+    remove(card: Card) : void{
+        var newPile : Card[] = []
+        this.pile.forEach(element => {
+            if(card.colour != element.colour || card.value != card.value){
+                newPile.push(element);
+            }
+        });
+        this.pile = newPile;
+    }
+
+    includes(card: Card) : boolean{
+        var bool = false;
+        this.pile.forEach(element => {
+            if(card.colour == element.colour && card.value == card.value){
+                bool = true;
+            }
+        });
+        return bool;
     }
 }

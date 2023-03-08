@@ -9,7 +9,7 @@ import { GameState } from "../model/GameState"
 
 export const router = express.Router();
 
-var unoService : IUnoService = instantiateUnoService("-1","hello");
+var unoService : IUnoService;
 
 interface GamelistItem{
     code : string,
@@ -17,7 +17,7 @@ interface GamelistItem{
 }
 
 router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
-    const gamelist : GamelistItem = {code : unoService.getCode()===undefined ? "" : unoService.getCode(), noOfPlayers : unoService.getNoOfPlayers()}
+    const gamelist : GamelistItem = {code : unoService===undefined ? "" : unoService.getCode(), noOfPlayers : unoService===undefined ? 0 : unoService.getNoOfPlayers()}
     res.status(200).send(gamelist)
 });
 
@@ -54,25 +54,23 @@ router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     }
 });
 
-//unsure on having params and body
 //places a card from the players hand
-router.put("/uno/select_card/:code/:id", async (
-    req: Request<{card:Card}>,
+router.put("/uno/select_card/", async (
+    req: Request<{},{},{card:Card, code:string, id:string}>,
     res: Response<Card | string>
 ) => {
     try {
         const player = req.body.id;
-        const card:Card = req.params.card;
+        const card:Card = req.body.card;
         if (typeof(player) !== "string") {
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
         }
-        if (typeof(req.body.card) !== typeof(Card)) {
+        if (card.value===undefined && card.colour===undefined) {
             res.status(500).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
-        unoService.place(card, player);
+        unoService.place(new Card(card.colour, card.value), player);
         res.status(200).send("Card placed");
-
     } catch (e: any) {
         res.status(500).send(e.message)
     }

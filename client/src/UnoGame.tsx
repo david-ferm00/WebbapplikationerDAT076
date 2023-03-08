@@ -11,19 +11,13 @@ import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { Game } from './uno/Game';
 
-
-interface details{
-    gameCode : string,
-    playerID : string
-}
-
 //make the game winnable (what happens when win)
 //make the player able to pick a colour when that happens
-//correct calling uno logic. with timings and that
-//making game server side sets player1 name to 1 regardless
+//correct calling uno logic. with timings and that. masybe not
 export function UnoGame() {
     var details = useParams()
-
+    const gameCode = details.gameCode!
+    const playerName = details.id!
     
     const fakeCard:Card = {
         colour: Colour.red,
@@ -40,12 +34,12 @@ export function UnoGame() {
         topCard: fakeCard
     }
     
-    const game = new Game(details.gameCode!, details.id!, defaultGameState)
+    const [gameState, updateGameState] = useState<GameState>(defaultGameState);
 
     useEffect(() => {
         let interval = setInterval(async (player_id : string, game_code : string) => {
-            const res = await axios.get<GameState>("http://localhost:8080/uno/game_state/"+game.player1Name);
-            game.updateGameState(res.data);
+            const res = await axios.get<GameState>("http://localhost:8080/uno/game_state/"+playerName);
+            updateGameState(res.data);
         }, 2000);
         return () => {
             clearInterval(interval);
@@ -56,15 +50,15 @@ export function UnoGame() {
         <body className="background">
             <Row className="text-center justify-content-center align-items-center">
                 <h1>Opponent</h1>
-                {DisplayOpponentDeck(game.gameState.sizeOppPile)}
+                {DisplayOpponentDeck(gameState.sizeOppPile)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">
                 <h1>Draw pile</h1>
-                {DisplayDrawPile(game)}
+                {DisplayDrawPile(gameState, playerName, gameCode)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">
-                <h1>{game.player1Name}</h1>
-                {DisplayYourDeck(game)}
+                <h1>{playerName}</h1>
+                {DisplayYourDeck(gameState, playerName, gameCode)}
             </Row>
         </body>
     )
@@ -77,7 +71,8 @@ function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolea
 
     async function selectCard(){
         if(hand && yourTurn && (topCard.colour==card.colour || topCard.value==card.value)){
-            await axios.put("http://localhost:8080/uno/select_card/"+code+"/"+id, {card : card});
+            console.log(card);
+            await axios.put("http://localhost:8080/uno/select_card/", {card : card, code : code, id : id});
         }
     }
 
@@ -115,35 +110,23 @@ function CardBack() {
         )
 } 
 
-function DisplayOpponentDeck (size : number) {
-    const [cards, alterNumberOfCards] = useState<number[]>(Array(size));
-    
-    function addCard(){
-        alterNumberOfCards(prev => prev.concat(1))
-    }
+function DisplayOpponentDeck (size:number) {
 
-    function removeCard(){
-        alterNumberOfCards(prev => prev.slice(1))
+    function getList() : number[]{
+        var result = Array(size);
+        for (let index = 0; index < result.length; index++) {
+            result[index] = 1;
+        }
+        return result;
     }
-
-    useEffect(() => {
-        let interval = setInterval(async () => {
-            alterNumberOfCards(() => Array(size))
-        }, 100);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
 
     return( <div className='opponent-hand'>
-        <Button onClick={addCard}> Add card</Button>
-        <Button onClick={removeCard}> Remove card</Button>
         <Row>
             <Col md={3}></Col>
             <Col md={6}>
                 <Row>
                     {
-                        cards.map(() => (
+                        getList().map(() => (
                         <Col className="md-auto"><CardBack/></Col>
                         ))
                     }
@@ -157,30 +140,7 @@ function DisplayOpponentDeck (size : number) {
     </div>)
 }
 
-function DisplayYourDeck (game : Game) {
-    const fakeCard:Card = {
-        colour: Colour.red,
-        value: Value.one,
-        image: "one_red"
-    }
-    const [cards, alterNumberOfCards] = useState<Pile>(game.gameState.yourPile);
-    const [id, changeID] = useState<string>("");
-    const [code, changeCode] = useState<string>("");
-    const [yourTurn, changeTurn] = useState<boolean>(false);
-    const [topCard, changeTopCard] = useState<Card>(fakeCard);
-    
-    useEffect(() => {
-        let interval = setInterval(async () => {
-            alterNumberOfCards(game.gameState.yourPile)
-            changeTurn(game.gameState.yourTurn)
-            changeTopCard(game.gameState.topCard)
-            changeID(game.player1Name)
-            changeCode(game.gameCode)
-        }, 100);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
+function DisplayYourDeck (gameState : GameState, player1Name : string, gameCode : string) {
 
     return( 
     <div className='your-hand'>
@@ -189,8 +149,8 @@ function DisplayYourDeck (game : Game) {
             <Col md={6}>
                 <Row>
                     {
-                        cards.pile.map((card:Card) => (
-                            <Col className="md-auto">{CardFace(card, yourTurn, topCard, true, id, code)}</Col>
+                        gameState.yourPile.pile.map((card:Card) => (
+                            <Col className="md-auto">{CardFace(card, gameState.yourTurn, gameState.topCard, true, player1Name, gameCode)}</Col>
                             ))
                     }
                 </Row>
@@ -200,39 +160,16 @@ function DisplayYourDeck (game : Game) {
     </div>)
 }
 
-function DisplayDrawPile(game:Game) {
-    //const cards:number[] = Array(size)
-    // if (size > 5) {
-    //     return (
-    //         {CardBack}
-    //     )
-    // } else {
-    //     const cards:number[] = Array(size)
-    //      return (
-    //         <div className='draw-pile'>
-    //             {
-    //                 cards.map(() => (
-    //                     <CardBack/>
-    //                 ))
-    //             }
-    //         </div>
-    //     )
-    // }
-
-    const fakeCard:Card = {
-        colour: Colour.red,
-        value: Value.one,
-        image: "one_red"
-    }
+function DisplayDrawPile(gameState:GameState, playerName : string, gameCode : string) {
     
     return (
         <div>
             <Row className="justify-content-md-center">
                 <Col md="auto">
                     <Row>
-                        <Col onClick={() => console.log(game.gameState)}>{DrawPile(game)}</Col>
-                        <Col>{UnoButton(game)}</Col>
-                        <Col>{CardFace(game.gameState.topCard, false, game.gameState.topCard, false, "", "")}</Col>
+                        <Col onClick={() => console.log(gameState)}>{DrawPile(gameState, gameCode, playerName)}</Col>
+                        <Col>{UnoButton(playerName, gameCode)}</Col>
+                        <Col>{CardFace(gameState.topCard, false, gameState.topCard, false, "", "")}</Col>
                     </Row>
                 </Col>
             </Row>
@@ -240,9 +177,9 @@ function DisplayDrawPile(game:Game) {
     )
 }
 
-function UnoButton(game : Game){
+function UnoButton(player1Name : string, gameCode : string){
     async function onClick(){
-        await axios.put("http://localhost:8080/uno/say_uno/"+game.gameCode+"/"+game.player1Name)
+        await axios.put("http://localhost:8080/uno/say_uno/"+gameCode+"/"+player1Name)
     }
 
     return(
@@ -250,23 +187,23 @@ function UnoButton(game : Game){
     )
 }
 
-function DrawPile(game : Game) {
-    async function pickUp(game : Game){
-        if(checkPile(game)){
-            await axios.put("http://localhost:8080/uno/pickUpCard/"+game.gameCode+"/"+game.player1Name);
+function DrawPile(gameState : GameState, gameCode : string, player1Name : string) {
+    async function pickUp(){
+        if(checkPile(gameState)){
+            await axios.put("http://localhost:8080/uno/pickUpCard/"+gameCode+"/"+player1Name);
         }
     }
 
     return (
     <div className='card-back'>
-        <img src={require('./images/back.jpg')} alt={"Back of card"} onClick={() => pickUp(game)}/>
+        <img src={require('./images/back.jpg')} alt={"Back of card"} onClick={() => pickUp()}/>
     </div>
     )
 }
 
-function checkPile(game: Game) :  boolean{
-    game.gameState.yourPile.pile.forEach(card => {
-        if(card.value == game.gameState.topCard.value || card.colour == game.gameState.topCard.colour){
+function checkPile(gameState: GameState) :  boolean{
+    gameState.yourPile.pile.forEach(card => {
+        if(card.value == gameState.topCard.value || card.colour == gameState.topCard.colour){
             return false;
         }
     });
