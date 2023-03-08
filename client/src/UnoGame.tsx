@@ -124,7 +124,7 @@ function DisplayOpponentDeck (size:number) {
         <Row>
             <Col md={3}></Col>
             <Col md={6}>
-                <Row>
+                <Row className='justify-content-center'>
                     {
                         getList().map(() => (
                         <Col className="md-auto"><CardBack/></Col>
@@ -147,7 +147,7 @@ function DisplayYourDeck (gameState : GameState, player1Name : string, gameCode 
         <Row>
             <Col md={3}></Col>
             <Col md={6}>
-                <Row>
+                <Row className='justify-content-center'>
                     {
                         gameState.yourPile.pile.map((card:Card) => (
                             <Col className="md-auto">{CardFace(card, gameState.yourTurn, gameState.topCard, true, player1Name, gameCode)}</Col>
