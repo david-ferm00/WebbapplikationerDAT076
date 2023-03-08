@@ -29,7 +29,8 @@ export function UnoGame() {
         sizeGamePile: 0,
         sizeDrawPile: 4,
         sizeOppPile: 0,
-        topCard: fakeCard
+        topCard: fakeCard,
+        opponentName: "Opponent"
     }
     
     const [gameState, updateGameState] = useState<GameState>(defaultGameState);
@@ -47,7 +48,7 @@ export function UnoGame() {
     return (
         <body className="background">
             <Row className="text-center justify-content-center align-items-center">
-                <h1>Opponent</h1>
+                <h1>{gameState.opponentName}</h1>
                 {DisplayOpponentDeck(gameState.sizeOppPile)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">

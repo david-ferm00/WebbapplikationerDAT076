@@ -49,11 +49,11 @@ export class Game implements IUnoService{
         }
         this.discardPile.addCard(this.drawDeck.pickTopCard());
 
-        this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard());
-        this.gameStatePlayer2 = new GameState(this.handPlayer2, this.currentPlayer==2 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer1.size(), this.discardPile.seeTopCard());
+        this.player2Name = "";
+        this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard(), this.player2Name);
+        this.gameStatePlayer2 = new GameState(this.handPlayer2, this.currentPlayer==2 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer1.size(), this.discardPile.seeTopCard(), player1);
         
         this.player1Name = player1;
-        this.player2Name = "";
     }
 
     setPlayer2Name(name: string){
@@ -158,6 +158,7 @@ export class Game implements IUnoService{
             this.gameStatePlayer1.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer1.yourPile = this.handPlayer1;
             this.gameStatePlayer1.yourTurn = this.currentPlayer==1 ? true:false;
+            this.gameStatePlayer1.opponentName = this.player2Name
             return this.gameStatePlayer1;
         } else if(requestedPlayer==this.player2Name){
             this.gameStatePlayer2.sizeDrawPile = this.drawDeck.size();
@@ -165,6 +166,7 @@ export class Game implements IUnoService{
             this.gameStatePlayer2.topCard = this.discardPile.seeTopCard();
             this.gameStatePlayer2.yourPile = this.handPlayer2;
             this.gameStatePlayer2.yourTurn = this.currentPlayer==2 ? true:false;
+            this.gameStatePlayer2.opponentName = this.player1Name
             return this.gameStatePlayer2;
         }
         throw Error("not a player");
