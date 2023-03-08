@@ -98,10 +98,11 @@ export class Game implements IUnoService{
 
     place(card: Card, player: String) : boolean{
         if(player == this.player1Name && this.whoseTurn()==1){
-            if(this.handPlayer1.remove(card)){
+            if(this.handPlayer1.includes(card)){
+                this.handPlayer1.remove(card);
                 this.discardPile.addCard(card);
                 this.switchPlayer();
-
+                
                 /*if(this.handPlayer1.size()==1){
                     this.uno = false;
                     var counter = 2
@@ -110,7 +111,7 @@ export class Game implements IUnoService{
                         if(counter === 0 && !this.uno) this.falseUno(1);
                     }, 1000)
                 }*/
-
+                
                 if(card.value==10 || card.value==11){
                     for (let index = 0; index < (card.value-9)*2; index++) {
                         this.cardFromDrawPile(this.player2Name)
@@ -120,7 +121,8 @@ export class Game implements IUnoService{
                 return true;
             }
         } else if(player == this.player2Name && this.whoseTurn()==2){
-            if(this.handPlayer2.remove(card)){
+            if(this.handPlayer2.includes(card)){
+                this.handPlayer2.remove(card);
                 this.discardPile.addCard(card);
                 this.switchPlayer();
                 
@@ -199,6 +201,5 @@ export class Game implements IUnoService{
 
 
 export function instantiateUnoService(code: string, playerName: string) : IUnoService {
-    console.log(playerName);
     return new Game(code, playerName); 
 }
