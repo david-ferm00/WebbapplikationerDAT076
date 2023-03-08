@@ -12,7 +12,6 @@ import SelectColor from './SelectColor';
 
 //make the player able to pick a colour when that happens
 //correct calling uno logic. with timings and that. masybe not
-//incorrect amount of opponent cards
 export function UnoGame() {
     var details = useParams()
     const gameCode = details.gameCode!

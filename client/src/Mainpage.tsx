@@ -52,17 +52,13 @@ interface Games{
 
 function Gamefinder(){
 
-    const playerID = {
-        name : "",
-    }
-
     const GameList : Games= {
         code : "default",
         noOfPlayers : 0
     } 
 
     const [state, updateGameList] = useState(GameList)
-    const [name, updateName] = useState(playerID)
+    const [name, updateName] = useState("")
 
     useEffect(() => {
         let interval = setInterval(async () => {
@@ -86,7 +82,7 @@ function Gamefinder(){
                                 type="text" 
                                 id="playerId" 
                                 name="playerID" 
-                                onChange={e => name.name=e.target.value}/>
+                                onChange={e => updateName(e.target.value)}/>
                         </Form.Group>
                     </Form>
                 </div>
@@ -94,7 +90,7 @@ function Gamefinder(){
             <div className="row h-85 justify-content-center p-3">
                 <div className="game-list">
                     <ul>
-                        {ListItem(state.code, state.noOfPlayers, name.name)}
+                        {ListItem(state.code, state.noOfPlayers, name)}
                     </ul>
                 </div>
             </div>
