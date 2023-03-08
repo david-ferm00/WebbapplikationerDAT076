@@ -113,9 +113,9 @@ function CardBack() {
 function DisplayOpponentDeck (size:number) {
 
     function getList() : number[]{
-        var result = Array(size);
-        for (let index = 0; index < result.length; index++) {
-            result[index] = 1;
+        var result = [];
+        for (let index = 0; index < size; index++) {
+            result.push(1);
         }
         return result;
     }

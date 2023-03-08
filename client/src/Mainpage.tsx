@@ -151,7 +151,7 @@ class GameCreator extends Component{
                     </div>
                 </div>
 
-                <div className="row h-50 align-items-end justify-content-center">
+                <div className="row h-50 align-items-center justify-content-center">
                     <div className="col-auto">
                         <Link to ={"/UnoGame/"+this.state.code+"/"+this.state.name}>
                         <   Button variant="light" 

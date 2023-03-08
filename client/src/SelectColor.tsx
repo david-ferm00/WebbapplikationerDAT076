@@ -23,22 +23,22 @@ export function SelectColor () {
         <Modal.Body>
             <Form>
               <div className="mb-3">
-              <Button className="card-size-button"
-              key='red'>
-                  <img src={require("./images/red.jpg")} alt={"red"}/>
-              </Button>
-              <Button className="card-size-button"
-              key='blue'>
-                  <img src={require("./images/blue.jpg")} alt={"blue"}/>
-              </Button>
-              <Button className="card-size-button"
-              key='yellow'>
-                  <img src={require("./images/yellow.jpg")} alt={"yellow"}/>
-              </Button>
-              <Button className="card-size-button"
-              key='green'>
-                  <img src={require("./images/green.jpg")} alt={"green"}/>
-              </Button>
+                <Button className="card-size-button"
+                key='red'>
+                    <img src={require("./images/red.jpg")} alt={"red"}/>
+                </Button>
+                <Button className="card-size-button"
+                key='blue'>
+                    <img src={require("./images/blue.jpg")} alt={"blue"}/>
+                </Button>
+                <Button className="card-size-button"
+                key='yellow'>
+                    <img src={require("./images/yellow.jpg")} alt={"yellow"}/>
+                </Button>
+                <Button className="card-size-button"
+                key='green'>
+                    <img src={require("./images/green.jpg")} alt={"green"}/>
+                </Button>
               </div>
 
             </Form>
