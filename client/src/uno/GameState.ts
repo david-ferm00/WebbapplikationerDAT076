@@ -8,13 +8,15 @@ export class GameState {
     sizeDrawPile: number;
     sizeOppPile: number;
     topCard: Card;
+    opponentName : string;
 
-    constructor(yourPile : Pile, yourTurn : boolean, sizeGamePile : number, sizeDrawPile : number, sizeOppPile : number, topCard : Card) {
+    constructor(yourPile : Pile, yourTurn : boolean, sizeGamePile : number, sizeDrawPile : number, sizeOppPile : number, topCard : Card, opponentName : string) {
         this.yourPile = yourPile;
         this.yourTurn = yourTurn;
         this.sizeGamePile = sizeGamePile;
         this.sizeDrawPile = sizeDrawPile
         this.sizeOppPile = sizeOppPile;
         this.topCard = topCard;
+        this.opponentName = opponentName;
     }
 }
