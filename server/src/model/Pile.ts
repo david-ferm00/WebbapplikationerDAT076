@@ -72,10 +72,13 @@ export class Pile{
     }
 
     remove(card: Card) : void{
+        var oneRemoved = false;
         var newPile : Card[] = []
         this.pile.forEach(element => {
-            if(card.colour != element.colour || card.value != card.value){
+            if(card.colour != element.colour || card.value != element.value || oneRemoved){
                 newPile.push(element);
+            } else {
+                oneRemoved = true;
             }
         });
         this.pile = newPile;

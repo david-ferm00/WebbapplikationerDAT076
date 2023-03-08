@@ -69,6 +69,7 @@ router.put("/uno/select_card/", async (
             res.status(500).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
+        console.log(new Card(card.colour, card.value))
         unoService.place(new Card(card.colour, card.value), player);
         res.status(200).send("Card placed");
     } catch (e: any) {
