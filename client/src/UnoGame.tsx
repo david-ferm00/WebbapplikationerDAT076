@@ -36,7 +36,7 @@ export function UnoGame() {
 
     useEffect(() => {
         let interval = setInterval(async (player_id : string, game_code : string) => {
-            const res = await axios.get<GameState>("http://localhost:8080/uno/game_state/"+playerName);
+            const res = await axios.get<GameState>("http://localhost:8080/uno/game_state/"+gameCode+"/"+playerName);
             updateGameState(res.data);
         }, 200);
         return () => {
@@ -52,27 +52,27 @@ export function UnoGame() {
             </Row>
             <Row className="text-center justify-content-center align-items-center">
                 <h1>Draw pile</h1>
-                {DisplayDrawPile(gameState, playerName, gameCode)}
+                {DisplayDrawPile(gameState.topCard, playerName, gameCode)}
             </Row>
             <Row className="text-center justify-content-center align-items-center">
                 <h1>{playerName}</h1>
-                {DisplayYourDeck(gameState, playerName, gameCode)}
+                {DisplayYourDeck(gameState.yourPile, playerName, gameCode)}
             </Row>
             <Row className="justify-content-center">
-                {WinCard(gameState)}
+                {WinCard(gameState.yourPile.size(), gameState.sizeOppPile)}
                 <SelectColor/>
             </Row>
         </body>
     )
 }
 
-function WinCard(gameState: GameState){
+function WinCard(yourPileSize : number, sizeOppPile : number){
     var message = "";
-    if(gameState.yourPile.pile.length===0){
+    if(yourPileSize===0){
         return(
             message = "you win!!!"
         )
-    } else if(gameState.sizeOppPile===0){
+    } else if(sizeOppPile===0){
         return(
             message = "you lose!!!"
         )
@@ -82,13 +82,13 @@ function WinCard(gameState: GameState){
     )
 }
 
-function CardFace (card: Card, yourTurn : boolean, topCard : Card, hand : boolean, id : string, code : string) {
+function CardFace (card: Card, hand : boolean, id : string, code : string) {
     const imageName = getImageName(card);
 
     async function selectCard(){
-        if((hand && yourTurn && (topCard.colour===card.colour || topCard.value===card.value)) || card.colour===4){
+        if(hand){
             var cardToSend;
-            if(card.colour===4){
+            if(card.colour===Colour.none){
                 cardToSend=new Card(1, card.value);
             }else{
                 cardToSend=card;
@@ -162,7 +162,7 @@ function DisplayOpponentDeck (size:number) {
     </div>)
 }
 
-function DisplayYourDeck (gameState : GameState, player1Name : string, gameCode : string) {
+function DisplayYourDeck (yourPile : Pile, player1Name : string, gameCode : string) {
 
     return( 
     <div className='your-hand'>
@@ -171,8 +171,8 @@ function DisplayYourDeck (gameState : GameState, player1Name : string, gameCode 
             <Col md={6}>
                 <Row className='justify-content-center'>
                     {
-                        gameState.yourPile.pile.map((card:Card) => (
-                            <Col className="md-auto">{CardFace(card, gameState.yourTurn, gameState.topCard, true, player1Name, gameCode)}</Col>
+                        yourPile.pile.map((card:Card) => (
+                            <Col className="md-auto">{CardFace(card, true, player1Name, gameCode)}</Col>
                             ))
                     }
                 </Row>
@@ -182,16 +182,16 @@ function DisplayYourDeck (gameState : GameState, player1Name : string, gameCode 
     </div>)
 }
 
-function DisplayDrawPile(gameState:GameState, playerName : string, gameCode : string) {
+function DisplayDrawPile(topCard : Card, playerName : string, gameCode : string) {
     
     return (
         <div>
             <Row className="justify-content-md-center">
                 <Col md="auto">
                     <Row>
-                        <Col>{DrawPile(gameState, gameCode, playerName)}</Col>
+                        <Col>{DrawPile(gameCode, playerName)}</Col>
                         <Col>{UnoButton(playerName, gameCode)}</Col>
-                        <Col>{CardFace(gameState.topCard, false, gameState.topCard, false, "", "")}</Col>
+                        <Col>{CardFace(topCard, false, "", "")}</Col>
                     </Row>
                 </Col>
             </Row>
@@ -209,11 +209,9 @@ function UnoButton(player1Name : string, gameCode : string){
     )
 }
 
-function DrawPile(gameState : GameState, gameCode : string, player1Name : string) {
+function DrawPile(gameCode : string, player1Name : string) {
     async function pickUp(){
-        if(checkPile(gameState) && gameState.yourTurn){
-            await axios.put("http://localhost:8080/uno/pickUpCard/"+gameCode+"/"+player1Name);
-        }
+        await axios.put("http://localhost:8080/uno/pickUpCard/"+gameCode+"/"+player1Name);
     }
 
     return (
@@ -221,16 +219,6 @@ function DrawPile(gameState : GameState, gameCode : string, player1Name : string
         <img src={require('./images/back.jpg')} alt={"Back of card"} onClick={() => pickUp()}/>
     </div>
     )
-}
-
-function checkPile(gameState: GameState) :  boolean{
-    var bool = true;
-    gameState.yourPile.pile.forEach(card => {
-        if(card.value === gameState.topCard.value || card.colour === gameState.topCard.colour || card.colour===4){
-            bool = false;
-        }
-    });
-    return bool;
 }
 
 export default UnoGame;

@@ -35,7 +35,7 @@ router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response
 });
 
 //give the client the state of the game
-router.get("/uno/game_state/:id", async (req: Request, res: Response<GameState>) => {
+router.get("/uno/game_state/:code/:id", async (req: Request, res: Response<GameState>) => {
     try {
         const gameState : GameState = unoService.getState(req.params.id);
         res.status(200).send(gameState);
@@ -47,7 +47,7 @@ router.get("/uno/game_state/:id", async (req: Request, res: Response<GameState>)
 //give the player a card from the draw deck
 router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     try{
-        unoService.cardFromDrawPile(req.params.id);
+        unoService.pickUpCard(req.params.id);
         res.status(200).send("Works")
     }catch{
         res.status(400).send("failed")
@@ -66,7 +66,7 @@ router.put("/uno/select_card/", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
         }
         if (card.value===undefined && card.colour===undefined) {
-            res.status(500).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
+            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
         unoService.place(new Card(card.colour, card.value), player);

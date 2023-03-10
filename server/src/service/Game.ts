@@ -1,17 +1,18 @@
 import {Card} from '../model/card';
 import {Pile} from '../model/Pile';
 import { GameState } from '../model/GameState';
+import { Colour } from '../model/Colour';
 
 export interface IUnoService {
     // define methods to inferface with the router layer
 
-    cardFromDrawPile(player : string) : void
     getState(requestedPlayer : string) : GameState
     place(card: Card, player: string) : boolean
     getCode() : string
     getNoOfPlayers() : number
     setPlayerTwo(id : string) : void
     sayUno(player : string) : void
+    pickUpCard(player : string) : void
 }
 
 export class Game implements IUnoService{
@@ -60,40 +61,31 @@ export class Game implements IUnoService{
         this.player2Name = name;
     }
 
-    getRandomInt(max: number) : number {
+    private getRandomInt(max: number) : number {
         return Math.floor(Math.random() * max);
     }
 
-    whoseTurn() : number {
+    private whoseTurn() : number {
         return this.currentPlayer;
     }
 
-    switchPlayer() : void{
+    private switchPlayer() : void{
         this.currentPlayer += 1;
         if(this.currentPlayer > 2){
             this.currentPlayer = 1
         }
     }
 
-    topOfDiscard() : Card{
+    private topOfDiscard() : Card{
         return this.discardPile.seeTopCard();
     }
 
-    cardFromDrawPile(player: string) : void{
+    private cardFromDrawPile(player: string) : void{
         switch(player){
             case this.player1Name: this.handPlayer1.addCard(this.drawDeck.pickTopCard()); break;
             case this.player2Name: this.handPlayer2.addCard(this.drawDeck.pickTopCard()); break;
-            default: break;
+            default: throw Error("not a player"); break;
         }
-    }
-
-    handSize(player: number) : number{
-        switch(player){
-            case 1: return this.handPlayer1.size();
-            case 2: return this.handPlayer2.size();
-            default: break;
-        }
-        return 0;
     }
 
     place(card: Card, player: String) : boolean{
@@ -102,50 +94,36 @@ export class Game implements IUnoService{
             actualCard = new Card(4, card.value);
         }
         if(player == this.player1Name && this.whoseTurn()==1){
-            if(this.handPlayer1.includes(actualCard)){
-                this.handPlayer1.remove(actualCard);
-                this.discardPile.addCard(card);
-                this.switchPlayer();
-                
-                /*if(this.handPlayer1.size()==1){
-                    this.uno = false;
-                    var counter = 2
-                    let intervalId = setInterval(() => {
-                        counter = counter - 1;
-                        if(counter === 0 && !this.uno) this.falseUno(1);
-                    }, 1000)
-                }*/
-                
-                if(card.value==10 || card.value==11){
-                    for (let index = 0; index < (card.value-9)*2; index++) {
-                        this.cardFromDrawPile(this.player2Name)
+            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+                if(this.handPlayer1.includes(actualCard)){
+                    this.handPlayer1.remove(actualCard);
+                    this.discardPile.addCard(card);
+                    this.switchPlayer();
+                    
+                    if(card.value==10 || card.value==11){
+                        for (let index = 0; index < (card.value-9)*2; index++) {
+                            this.cardFromDrawPile(this.player2Name)
+                        }
                     }
+                    
+                    return true;
                 }
-                
-                return true;
             }
         } else if(player == this.player2Name && this.whoseTurn()==2){
-            if(this.handPlayer2.includes(actualCard)){
-                this.handPlayer2.remove(actualCard);
-                this.discardPile.addCard(card);
-                this.switchPlayer();
-                
-                /*if(this.handPlayer2.size()==1){
-                    this.uno = false;
-                    var counter = 2
-                    let intervalId = setInterval(() => {
-                        counter = counter - 1;
-                        if(counter === 0 && !this.uno) this.falseUno(2);
-                    }, 1000)
-                }*/
-                
-                if(card.value==10 || card.value==11){
-                    for (let index = 0; index < (card.value-9)*2; index++) {
-                        this.cardFromDrawPile(this.player1Name)
+            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+                if(this.handPlayer2.includes(actualCard)){
+                    this.handPlayer2.remove(actualCard);
+                    this.discardPile.addCard(card);
+                    this.switchPlayer();
+                    
+                    if(card.value==10 || card.value==11){
+                        for (let index = 0; index < (card.value-9)*2; index++) {
+                            this.cardFromDrawPile(this.player1Name)
+                        }
                     }
+    
+                    return true;
                 }
-
-                return true;
             }
         }
         return false;
@@ -190,12 +168,12 @@ export class Game implements IUnoService{
 
     sayUno(player : string) : void{
         switch(player){
-            case this.player1Name: this.handPlayer1.size()>1  ? this.falseUno(1) : this.uno = true;
-            case this.player2Name: this.handPlayer2.size()>1  ? this.falseUno(2) : this.uno = true;
+            case this.player1Name: this.handPlayer1.size()>1  ? this.falseUno(1) : this.uno = true; break;
+            case this.player2Name: this.handPlayer2.size()>1  ? this.falseUno(2) : this.uno = true; break;
         }
     }
 
-    falseUno(player : number){
+    private falseUno(player : number){
         if(player==1){
             this.cardFromDrawPile(this.player1Name);
             this.cardFromDrawPile(this.player1Name);
@@ -204,6 +182,28 @@ export class Game implements IUnoService{
             this.cardFromDrawPile(this.player2Name);
             this.cardFromDrawPile(this.player2Name);
         }
+    }
+
+    pickUpCard(player: string): void{
+        if(player == this.player1Name && this.whoseTurn()==1){
+            if(this.checkPile(this.handPlayer1)){
+                this.cardFromDrawPile(player);
+            }
+        } else if(player == this.player2Name && this.whoseTurn()==2){
+            if(this.checkPile(this.handPlayer2)){
+                this.cardFromDrawPile(player);
+            }
+        }
+    }
+
+    private checkPile(pile: Pile) :  boolean{
+        var bool = true;
+        pile.pile.forEach(card => {
+            if(card.value === this.topOfDiscard().value || card.colour === this.topOfDiscard().colour || card.colour===4){
+                bool = false;
+            }
+        });
+        return bool;
     }
 }
 
