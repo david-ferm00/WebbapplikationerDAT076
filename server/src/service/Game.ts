@@ -7,7 +7,7 @@ export interface IUnoService {
     // define methods to inferface with the router layer
 
     getState(requestedPlayer : string) : GameState
-    place(card: Card, player: string) : boolean
+    place(card: Card, player: string) : void
     getCode() : string
     getNoOfPlayers() : number
     setPlayerTwo(id : string) : void
@@ -57,18 +57,18 @@ export class Game implements IUnoService{
         this.player1Name = player1;
     }
 
-    setPlayer2Name(name: string){
-        this.player2Name = name;
-    }
-
+    /**
+     * a function to find a random integer
+     * @param max the max of the range of random integers
+     * @returns the random integer
+     */
     private getRandomInt(max: number) : number {
         return Math.floor(Math.random() * max);
     }
 
-    private whoseTurn() : number {
-        return this.currentPlayer;
-    }
-
+    /**
+     * Changes whose turn it is
+     */
     private switchPlayer() : void{
         this.currentPlayer += 1;
         if(this.currentPlayer > 2){
@@ -76,10 +76,18 @@ export class Game implements IUnoService{
         }
     }
 
+    /**
+     * This function gives the top card of the discard pile
+     * @returns the top card of the discard pile
+     */
     private topOfDiscard() : Card{
         return this.discardPile.seeTopCard();
     }
 
+    /**
+     * This function takes a card from the draw pile and gives it to one of the players hands
+     * @param player the player who's getting a card
+     */
     private cardFromDrawPile(player: string) : void{
         switch(player){
             case this.player1Name: this.handPlayer1.addCard(this.drawDeck.pickTopCard()); break;
@@ -88,12 +96,18 @@ export class Game implements IUnoService{
         }
     }
 
-    place(card: Card, player: String) : boolean{
+    /**
+     * This function takes a selected card from a players hand and places it on the discard pile
+     * It only places the card if it is allowed according to the rules of UNO
+     * @param card the selected card
+     * @param player the player who is trying to place the card
+     */
+    place(card: Card, player: String){
         var actualCard = card;
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
         }
-        if(player == this.player1Name && this.whoseTurn()==1){
+        if(player == this.player1Name && this.currentPlayer==1){
             if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
                 if(this.handPlayer1.includes(actualCard)){
                     this.handPlayer1.remove(actualCard);
@@ -109,7 +123,7 @@ export class Game implements IUnoService{
                     return true;
                 }
             }
-        } else if(player == this.player2Name && this.whoseTurn()==2){
+        } else if(player == this.player2Name && this.currentPlayer==2){
             if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
                 if(this.handPlayer2.includes(actualCard)){
                     this.handPlayer2.remove(actualCard);
@@ -129,6 +143,11 @@ export class Game implements IUnoService{
         return false;
     }
 
+    /**
+     * This function updates and gives the players the information they need to display the game
+     * @param requestedPlayer the player who is requesting the state
+     * @returns the state of the game
+     */
     getState(requestedPlayer : string) : GameState{
         if(requestedPlayer==this.player1Name){
             this.gameStatePlayer1.sizeDrawPile = this.drawDeck.size();
@@ -151,7 +170,7 @@ export class Game implements IUnoService{
         }
         throw Error("not a player");
     }
-
+    
     getCode() : string{
         return this.gameCode;
     }
@@ -162,10 +181,20 @@ export class Game implements IUnoService{
         return 2;
     }
 
+    /**
+     * A function for setting the name for the second player
+     * This function is called when a request is made for joining a game
+     * @param id the name of player2
+     */
     setPlayerTwo(id: string): void {
         this.player2Name = id;
     }
 
+    /**
+     * This function is called when a player presses the uno button
+     * if the player has more than one card in their hand they pick up two cards
+     * @param player the player who press uno
+     */
     sayUno(player : string) : void{
         switch(player){
             case this.player1Name: this.handPlayer1.size()>1  ? this.falseUno(1) : this.uno = true; break;
@@ -173,6 +202,11 @@ export class Game implements IUnoService{
         }
     }
 
+    /**
+     * If the player presses the uno button when they have more than one card this function is called
+     * This function gives the player two cards
+     * @param player the player who is getting cards
+     */
     private falseUno(player : number){
         if(player==1){
             this.cardFromDrawPile(this.player1Name);
@@ -184,18 +218,28 @@ export class Game implements IUnoService{
         }
     }
 
+    /**
+     * This function is called when a player requests a card from the draw  pile
+     * the player should only get a card if it is their turn and if they cannot play anything
+     * @param player the player who requested a card
+     */
     pickUpCard(player: string): void{
-        if(player == this.player1Name && this.whoseTurn()==1){
+        if(player == this.player1Name && this.currentPlayer==1){
             if(this.checkPile(this.handPlayer1)){
                 this.cardFromDrawPile(player);
             }
-        } else if(player == this.player2Name && this.whoseTurn()==2){
+        } else if(player == this.player2Name && this.currentPlayer==2){
             if(this.checkPile(this.handPlayer2)){
                 this.cardFromDrawPile(player);
             }
         }
     }
 
+    /**
+     * This function checks a Pile and returns whether there is a playable card or not
+     * @param pile the pile being checked
+     * @returns whether the pile is such that the player is allowed to pick up a card
+     */
     private checkPile(pile: Pile) :  boolean{
         var bool = true;
         pile.pile.forEach(card => {
@@ -206,7 +250,6 @@ export class Game implements IUnoService{
         return bool;
     }
 }
-
 
 export function instantiateUnoService(code: string, playerName: string) : IUnoService {
     return new Game(code, playerName); 

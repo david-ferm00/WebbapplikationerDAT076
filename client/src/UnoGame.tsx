@@ -12,6 +12,12 @@ import SelectColor from './SelectColor';
 
 //make the player able to pick a colour when that happens
 //correct calling uno logic. with timings and that. masybe not
+
+/**
+ * This is the main component of the game page. It brings everything together as well as gives the nessecary information to each component
+ * Here, a call to the server requesting the game state is made every 200ms, and then the gamestate is updated.
+ * @returns nothing
+ */
 export function UnoGame() {
     var details = useParams()
     const gameCode = details.gameCode!
@@ -66,6 +72,12 @@ export function UnoGame() {
     )
 }
 
+/**
+ * A simple component to tell the user whether they won or lost
+ * @param yourPileSize the size of the users hand
+ * @param sizeOppPile the size of the opponents hand
+ * @returns 
+ */
 function WinCard(yourPileSize : number, sizeOppPile : number){
     var message = "";
     if(yourPileSize===0){
@@ -82,6 +94,18 @@ function WinCard(yourPileSize : number, sizeOppPile : number){
     )
 }
 
+/**
+ * This component shows the cards face-up
+ * This is used in two places, the users hand and the discardpile
+ * If the card comes from the hand we want to send a request to the server when it is clicked
+ * Otherwise nothing should happen, that is why we have a boolean for whether the card is in the hadn
+ * The request sent to the server is to place the card onto the discardpile.
+ * @param card The card to be shown
+ * @param hand a boolean value of whether the card is shown from the hand or not
+ * @param id the player id of the user
+ * @param code the gamecode
+ * @returns nothing
+ */
 function CardFace (card: Card, hand : boolean, id : string, code : string) {
     const imageName = getImageName(card);
 
@@ -104,6 +128,13 @@ function CardFace (card: Card, hand : boolean, id : string, code : string) {
     )
 }
 
+/**
+ * In the CardFace component we need to select the correct image for the correct card
+ * There is a naming system in the image files and so this function takes a card and 
+ * gives the correct imagecode
+ * @param card The card to be shown
+ * @returns nothing
+ */
 function getImageName(card: Card) : string{
     var result = ""
     switch(card.value){
@@ -125,6 +156,11 @@ function getImageName(card: Card) : string{
     return result;
 }
 
+/**
+ * Simple comoponent to show the back of cards.
+ * This is used for the draw pile and the opponents hand
+ * @returns 
+ */
 function CardBack() {
     return (
     <div className='card-back'>
@@ -133,6 +169,11 @@ function CardBack() {
         )
 } 
 
+/**
+ * Component for displaying the opponents hand
+ * @param size the size of the opponents hand
+ * @returns 
+ */
 function DisplayOpponentDeck (size:number) {
 
     function getList() : number[]{
@@ -162,6 +203,13 @@ function DisplayOpponentDeck (size:number) {
     </div>)
 }
 
+/**
+ * Component for displaying the users hand
+ * @param yourPile the users hand
+ * @param player1Name the users name
+ * @param gameCode the gamecode
+ * @returns 
+ */
 function DisplayYourDeck (yourPile : Pile, player1Name : string, gameCode : string) {
 
     return( 
@@ -182,6 +230,14 @@ function DisplayYourDeck (yourPile : Pile, player1Name : string, gameCode : stri
     </div>)
 }
 
+/**
+ * Component for the middle row of the whole page.
+ * This contains the drawpile the discardpile and the uno button
+ * @param topCard The topcard of the discard pile
+ * @param playerName the users name
+ * @param gameCode the gamecode
+ * @returns 
+ */
 function DisplayDrawPile(topCard : Card, playerName : string, gameCode : string) {
     
     return (
@@ -199,6 +255,12 @@ function DisplayDrawPile(topCard : Card, playerName : string, gameCode : string)
     )
 }
 
+/**
+ * Simple component for the uno button and its logic
+ * @param player1Name the users name
+ * @param gameCode the game code
+ * @returns 
+ */
 function UnoButton(player1Name : string, gameCode : string){
     async function onClick(){
         await axios.put("http://localhost:8080/uno/say_uno/"+gameCode+"/"+player1Name)
@@ -209,6 +271,12 @@ function UnoButton(player1Name : string, gameCode : string){
     )
 }
 
+/**
+ * The drawpile's component and its logic
+ * @param gameCode the game code
+ * @param player1Name the users name
+ * @returns 
+ */
 function DrawPile(gameCode : string, player1Name : string) {
     async function pickUp(){
         await axios.put("http://localhost:8080/uno/pickUpCard/"+gameCode+"/"+player1Name);

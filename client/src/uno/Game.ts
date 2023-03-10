@@ -30,13 +30,6 @@ export class Game{
         return this.gameState.yourTurn;
     }
 
-    /*switchPlayer() : void{
-        this.currentPlayer += 1;
-        if(this.currentPlayer > 2){
-            this.currentPlayer = 1
-        }
-    }*/
-
     async place(card: Card) : Promise<boolean>{
         await axios.post("http://localhost:8080/uno/select_card/", {params: {player_name:this.player1Name , card:card}})
         return false;

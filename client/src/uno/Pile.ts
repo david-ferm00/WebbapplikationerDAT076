@@ -25,7 +25,6 @@ export class Pile extends Array{
     pickTopCard(): Card{
         let card: Card = this.pile.pop()!;
         return card;
-        //throw console.error("pile empty");
     }
 
     addCard(card:Card) {

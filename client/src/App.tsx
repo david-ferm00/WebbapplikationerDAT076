@@ -12,6 +12,10 @@ import {
 import UnoGame from './UnoGame';
 import Mainpage from './Mainpage';
 
+/**
+ * Here we define the different pages in the application, and how to reach them.
+ * @returns nothing
+ */
 function App() {
 
   return (

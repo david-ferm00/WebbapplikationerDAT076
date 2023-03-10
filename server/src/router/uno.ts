@@ -26,7 +26,7 @@ unoRouter.get("/uno/game_state/:id", async (req: Request, res: Response<GameStat
 unoRouter.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     //const unoService = getUnoServices();
     try{
-        unoService.cardFromDrawPile(req.params.id);
+        unoService.pickUpCard(req.params.id);
         res.status(200).send("Works")
     }catch{
         res.status(400).send("failed")
