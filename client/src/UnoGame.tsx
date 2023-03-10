@@ -59,7 +59,7 @@ export function UnoGame() {
                 {DisplayYourDeck(gameState.yourPile, playerName, gameCode)}
             </Row>
             <Row className="justify-content-center">
-                {WinCard(gameState.yourPile.size(), gameState.sizeOppPile)}
+                {WinCard(gameState.yourPile.length, gameState.sizeOppPile)}
                 <SelectColor/>
             </Row>
         </body>
