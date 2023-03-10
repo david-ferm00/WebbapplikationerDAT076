@@ -9,6 +9,7 @@ import { Value } from './uno/Value';
 import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import SelectColor from './SelectColor';
+import "./UnoGame.css"
 
 //make the player able to pick a colour when that happens
 //correct calling uno logic. with timings and that. masybe not
@@ -99,7 +100,7 @@ function CardFace (card: Card, hand : boolean, id : string, code : string) {
 
     return(
         <div className="card-front">
-            <img src={require("./images/"+imageName+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
+            <img className="zoom" src={require("./images/"+imageName+".jpg")} alt={"Value: " + card.value + " Colour: " + card.colour} onClick={() => selectCard()} />
         </div>
     )
 }

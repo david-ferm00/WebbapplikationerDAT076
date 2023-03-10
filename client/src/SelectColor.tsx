@@ -4,6 +4,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton'
 import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
+import "./SelectColor.css"
 
 
 export function SelectColor () {
@@ -23,22 +24,26 @@ export function SelectColor () {
         <Modal.Body>
             <Form>
               <div className="mb-3">
-                <Button className="card-size-button"
+                <Form.Check
+                inline
                 key='red'>
-                    <img src={require("./images/red.jpg")} alt={"red"}/>
-                </Button>
-                <Button className="card-size-button"
+                    <img className="zoom" src={require("./images/red.jpg")} alt={"red"}/>
+                </Form.Check>
+                <Form.Check
+                inline
                 key='blue'>
-                    <img src={require("./images/blue.jpg")} alt={"blue"}/>
-                </Button>
-                <Button className="card-size-button"
+                    <img className="zoom" src={require("./images/blue.jpg")} alt={"blue"}/>
+                </Form.Check>
+                <Form.Check
+                inline
                 key='yellow'>
-                    <img src={require("./images/yellow.jpg")} alt={"yellow"}/>
-                </Button>
-                <Button className="card-size-button"
+                    <img className="zoom" src={require("./images/yellow.jpg")} alt={"yellow"}/>
+                </Form.Check>
+                <Form.Check
+                inline
                 key='green'>
-                    <img src={require("./images/green.jpg")} alt={"green"}/>
-                </Button>
+                    <img className="zoom" src={require("./images/green.jpg")} alt={"green"}/>
+                </Form.Check>
               </div>
 
             </Form>
