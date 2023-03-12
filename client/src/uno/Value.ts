@@ -11,5 +11,6 @@ export enum Value{
     nine,
     plus_two,
     plus_four,
-    colour
+    colour,
+    none
 }

@@ -9,8 +9,10 @@ export class GameState {
     sizeOppPile: number;
     topCard: Card;
     opponentName : string;
+    selectColor: boolean;
 
-    constructor(yourPile : Pile, yourTurn : boolean, sizeGamePile : number, sizeDrawPile : number, sizeOppPile : number, topCard : Card, opponentName : string) {
+    constructor(yourPile : Pile, yourTurn : boolean, sizeGamePile : number, sizeDrawPile : number, sizeOppPile : number,
+         topCard : Card, opponentName : string, selectColor: boolean) {
         this.yourPile = yourPile;
         this.yourTurn = yourTurn;
         this.sizeGamePile = sizeGamePile;
@@ -18,5 +20,6 @@ export class GameState {
         this.sizeOppPile = sizeOppPile;
         this.topCard = topCard;
         this.opponentName = opponentName;
+        this.selectColor = selectColor;
     }
 }

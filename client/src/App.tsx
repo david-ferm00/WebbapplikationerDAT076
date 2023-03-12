@@ -9,7 +9,7 @@ import {
   Navigate,
   Link,
 } from "react-router-dom";
-import UnoGame from './UnoGame';
+import UnoGame from './unoGame/UnoGame';
 import Mainpage from './Mainpage';
 
 /**
