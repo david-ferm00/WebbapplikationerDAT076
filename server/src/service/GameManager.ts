@@ -1,6 +1,8 @@
 import {Card} from '../model/card';
 import { GameState } from '../model/GameState';
+import { Pile } from '../model/Pile';
 import { Game } from './Game';
+import { GameList } from './GameList';
 
 export interface IUnoService {
     // define methods to inferface with the router layer
@@ -9,8 +11,7 @@ export interface IUnoService {
 
     getState(requestedPlayer : string, code : string) : GameState
     place(code : string, card: Card, player: string) : void
-    getCode() : string
-    getNoOfPlayers() : number
+    getGameList() : GameList[]
     setPlayerTwo(id : string, code : string) : void
     sayUno(player : string, code : string) : void
     pickUpCard(player : string, code : string) : void
@@ -18,9 +19,11 @@ export interface IUnoService {
 
 export class GameManager implements IUnoService{
     currentGames : Game[] = [];
+    gameList : GameList[] = [];
 
     createGame(code: string, name: string): void {
         this.currentGames.push(new Game(code, name));
+        this.gameList.push(new GameList(code, 1));
     }
 
     /**
@@ -43,21 +46,20 @@ export class GameManager implements IUnoService{
      * @returns the state of the game
      */
     getState(requestedPlayer : string, code : string) : GameState{
-        var gameState : GameState;
+        var gameState : GameState = new GameState(new Pile(true), false, 0, 0, 0, new Card(0,0), "");
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
                 gameState = game.getState(requestedPlayer);
             }
         });
+        /*if(gameState.sizeDrawPile===0 && gameState.sizeGamePile===0 && gameState.sizeOppPile===0){
+            throw new Error("Cannot find game");
+        }*/
         return gameState;
     }
-    
-    getCode() : string{
 
-    }
-
-    getNoOfPlayers() : number{
-    
+    getGameList() : GameList[]{
+        return this.gameList;
     }
 
     /**
@@ -69,6 +71,11 @@ export class GameManager implements IUnoService{
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
                 game.setPlayerTwo(id);
+            }
+        });
+        this.gameList.forEach(game => {
+            if(game.gameCode===code){
+                game.noOfPlayers += 1;
             }
         });
     }

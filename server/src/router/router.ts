@@ -3,23 +3,18 @@ import { Request, Response } from "express";
 import { instantiateUnoService } from "../service/GameManager";
 import { IUnoService } from "../service/GameManager";
 import { Card } from "../model/card";
-import { Colour } from "../model/Colour";
 import { GameState } from "../model/GameState"
+import { GameList } from "../service/GameList";
 
 
 export const router = express.Router();
 
 var unoService : IUnoService = instantiateUnoService();
 
-interface GamelistItem {
-    code : string,
-    noOfPlayers : number
-}
-
 //Get available game
 router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
     try {
-       const gamelist : GamelistItem = {code : unoService===undefined ? "" : unoService.getCode(), noOfPlayers : unoService===undefined ? 0 : unoService.getNoOfPlayers()}
+       const gamelist : GameList[] = unoService.getGameList();
         res.status(200).send(gamelist) 
     } catch (e : any) {
         console.error(e.stack)
@@ -27,11 +22,10 @@ router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
     }
 });
 
-//TODO is there a better
 //create a game
 router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
     try {
-        unoService = instantiateUnoService(req.params.code, req.params.id);
+        unoService.createGame(req.params.code, req.params.id);
         res.status(200)
     } catch (e : any) {
         console.error(e.stack)
@@ -42,9 +36,7 @@ router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Respo
 //join a game
 router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response) => {
     try {
-        if(unoService.getCode() == req.params.code){
-            unoService.setPlayerTwo(req.params.id);
-        }
+        unoService.setPlayerTwo(req.params.id, req.params.code);
         res.status(200) //TODO
     } catch (e: any) {
         console.error(e.stack)
@@ -55,7 +47,7 @@ router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response
 //give the client the state of the game
 router.get("/uno/game_state/:code/:id", async (req: Request, res: Response<GameState>) => {
     try {
-        const gameState : GameState = unoService.getState(req.params.id);
+        const gameState : GameState = unoService.getState(req.params.id, req.params.code);
         res.status(200).send(gameState);
     } catch (e: any) {
         console.error(e.stack)
@@ -66,7 +58,7 @@ router.get("/uno/game_state/:code/:id", async (req: Request, res: Response<GameS
 //give the player a card from the draw deck
 router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     try{
-        unoService.pickUpCard(req.params.id);
+        unoService.pickUpCard(req.params.id, req.params.code);
         res.status(200).send("Works")
     }catch (e: any) {
         console.error(e.stack)
@@ -89,7 +81,7 @@ router.put("/uno/select_card/", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
-        unoService.place(new Card(card.colour, card.value), player);
+        unoService.place(req.body.code, new Card(card.colour, card.value), player);
         res.status(200).send("Card placed");
     } catch (e: any) {
         console.error(e.stack)
@@ -108,7 +100,7 @@ router.put("/uno/say_uno/:code/:id", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
             return;
         }
-        unoService.sayUno(player);
+        unoService.sayUno(player,req.params.code);
 
     } catch (e: any) {
         console.error(e.stack)
