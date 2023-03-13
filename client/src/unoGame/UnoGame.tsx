@@ -62,10 +62,10 @@ export function UnoGame() {
         };
     }, []);
 
-    var whatColor
-    if(gameState.topCard.colour === Colour.none){
-        whatColor = (
-            <h1></h1>
+    var displayColor
+    if(gameState.yourTurn && (gameState.topCard.value === 11 || gameState.topCard.value === 12)) {
+        displayColor = (
+            <h1>{Colour[gameState.topCard.colour] + " was chosen by " + gameState.opponentName}</h1>
         )
     }
     
@@ -106,7 +106,7 @@ export function UnoGame() {
         <body className="background">
             {opponentSlot}
             <Row className="text-center justify-content-center align-items-center">
-                <h1>Draw pile</h1>
+                <h1>Draw pile</h1> {displayColor}
                 <DisplayDrawPile topCard={gameState.topCard} playerName={playerName} gameCode={gameCode}/>
             </Row>
             <Row className="text-center justify-content-center align-items-center">
