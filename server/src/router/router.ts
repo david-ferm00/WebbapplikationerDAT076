@@ -11,25 +11,45 @@ export const router = express.Router();
 
 var unoService : IUnoService = instantiateUnoService();
 
-interface GamelistItem{
+interface GamelistItem {
     code : string,
     noOfPlayers : number
 }
 
+//Get available game
 router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
-    const gamelist : GamelistItem = {code : unoService===undefined ? "" : unoService.getCode(), noOfPlayers : unoService===undefined ? 0 : unoService.getNoOfPlayers()}
-    res.status(200).send(gamelist)
+    try {
+       const gamelist : GamelistItem = {code : unoService===undefined ? "" : unoService.getCode(), noOfPlayers : unoService===undefined ? 0 : unoService.getNoOfPlayers()}
+        res.status(200).send(gamelist) 
+    } catch (e : any) {
+        console.error(e.stack)
+        res.status(500).send(e.message)
+    }
 });
 
+//TODO is there a better
 //create a game
 router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
-    unoService.createGame(req.params.code, req.params.id);
-    res.status(200)
+    try {
+        unoService = instantiateUnoService(req.params.code, req.params.id);
+        res.status(200)
+    } catch (e : any) {
+        console.error(e.stack)
+        res.status(500).send(e.message)
+    }
 });
 
 //join a game
 router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response) => {
-    unoService.setPlayerTwo(req.params.id, req.params.code);
+    try {
+        if(unoService.getCode() == req.params.code){
+            unoService.setPlayerTwo(req.params.id);
+        }
+        res.status(200) //TODO
+    } catch (e: any) {
+        console.error(e.stack)
+        res.status(500).send(e.message)
+    }
 });
 
 //give the client the state of the game
@@ -38,6 +58,7 @@ router.get("/uno/game_state/:code/:id", async (req: Request, res: Response<GameS
         const gameState : GameState = unoService.getState(req.params.id);
         res.status(200).send(gameState);
     } catch (e: any) {
+        console.error(e.stack)
         res.status(500).send(e.message);
     }
 });
@@ -47,7 +68,8 @@ router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     try{
         unoService.pickUpCard(req.params.id);
         res.status(200).send("Works")
-    }catch{
+    }catch (e: any) {
+        console.error(e.stack)
         res.status(400).send("failed")
     }
 });
@@ -70,6 +92,7 @@ router.put("/uno/select_card/", async (
         unoService.place(new Card(card.colour, card.value), player);
         res.status(200).send("Card placed");
     } catch (e: any) {
+        console.error(e.stack)
         res.status(500).send(e.message)
     }
 });
@@ -88,6 +111,7 @@ router.put("/uno/say_uno/:code/:id", async (
         unoService.sayUno(player);
 
     } catch (e: any) {
+        console.error(e.stack)
         res.status(500).send(e.message)
     }
 });
