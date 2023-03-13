@@ -22,6 +22,11 @@ export class GameManager implements IUnoService{
     gameList : GameList[] = [];
 
     createGame(code: string, name: string): void {
+        this.currentGames.forEach(game => {
+            if(game.getCode()===code){
+                throw new Error("Game code already exists");
+            }
+        });
         this.currentGames.push(new Game(code, name));
         this.gameList.push(new GameList(code, 1));
     }
