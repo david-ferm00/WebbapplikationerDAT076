@@ -1,4 +1,3 @@
-import CardHeader from 'react-bootstrap/esm/CardHeader';
 import {Card} from './card';
 
 export class Pile{
