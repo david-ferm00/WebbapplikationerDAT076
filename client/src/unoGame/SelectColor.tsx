@@ -26,7 +26,7 @@ export function SelectColor (props: {toggleSelectColour: Function, selectSpecial
       style={{ display: 'block', position: 'initial' }}
     >
       <Modal.Dialog>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Choose a colour</Modal.Title>
         </Modal.Header>
 

@@ -168,7 +168,7 @@ export class Game{
             this.gameStatePlayer2.opponentName = this.player1Name
             return this.gameStatePlayer2;
         }
-        throw Error("not a player");
+        throw Error(requestedPlayer + " is not a player in game: " + this.gameCode);
     }
     
     getCode() : string{
