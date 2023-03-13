@@ -4,7 +4,7 @@ import { instantiateUnoService } from "../service/GameManager";
 import { IUnoService } from "../service/GameManager";
 import { Card } from "../model/card";
 import { GameState } from "../model/GameState"
-import { GameList } from "../service/GameList";
+import { GameListElement } from "../service/GameListElement";
 
 
 export const router = express.Router();
@@ -14,7 +14,7 @@ var unoService : IUnoService = instantiateUnoService();
 //Get available game
 router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
     try {
-       const gamelist : GameList[] = unoService.getGameList();
+       const gamelist : GameListElement[] = unoService.getGameList();
         res.status(200).send(gamelist) 
     } catch (e : any) {
         console.error(e.stack)

@@ -2,7 +2,7 @@ import {Card} from '../model/card';
 import { GameState } from '../model/GameState';
 import { Pile } from '../model/Pile';
 import { Game } from './Game';
-import { GameList } from './GameList';
+import { GameListElement } from './GameListElement';
 
 export interface IUnoService {
     // define methods to inferface with the router layer
@@ -11,7 +11,7 @@ export interface IUnoService {
 
     getState(requestedPlayer : string, code : string) : GameState
     place(code : string, card: Card, player: string) : void
-    getGameList() : GameList[]
+    getGameList() : GameListElement[]
     setPlayerTwo(id : string, code : string) : void
     sayUno(player : string, code : string) : void
     pickUpCard(player : string, code : string) : void
@@ -19,16 +19,11 @@ export interface IUnoService {
 
 export class GameManager implements IUnoService{
     currentGames : Game[] = [];
-    gameList : GameList[] = [];
+    gameList : GameListElement[] = [];
 
     createGame(code: string, name: string): void {
-        this.currentGames.forEach(game => {
-            if(game.getCode()===code){
-                throw new Error("Game code already exists");
-            }
-        });
         this.currentGames.push(new Game(code, name));
-        this.gameList.push(new GameList(code, 1));
+        this.gameList.push(new GameListElement(code, 1));
     }
 
     /**
@@ -63,7 +58,7 @@ export class GameManager implements IUnoService{
         return gameState;
     }
 
-    getGameList() : GameList[]{
+    getGameList() : GameListElement[]{
         return this.gameList;
     }
 
