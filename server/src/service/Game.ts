@@ -3,7 +3,7 @@ import {Pile} from '../model/Pile';
 import { GameState } from '../model/GameState';
 import { Colour } from '../model/Colour';
 
-export interface IUnoService {
+/*export interface IUnoService {
     // define methods to inferface with the router layer
 
     getState(requestedPlayer : string) : GameState
@@ -13,9 +13,9 @@ export interface IUnoService {
     setPlayerTwo(id : string) : void
     sayUno(player : string) : void
     pickUpCard(player : string) : void
-}
+}*/
 
-export class Game implements IUnoService{
+export class Game{
     player1Name : string;
     player2Name : string;
 
@@ -251,6 +251,6 @@ export class Game implements IUnoService{
     }
 }
 
-export function instantiateUnoService(code: string, playerName: string) : IUnoService {
+/*export function instantiateUnoService(code: string, playerName: string) : IUnoService {
     return new Game(code, playerName); 
-}
+}*/

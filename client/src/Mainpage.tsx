@@ -6,13 +6,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import { Component, useEffect, useState } from "react";
 import { Form } from 'react-bootstrap';
-import { render } from '@testing-library/react';
 import {
-    BrowserRouter as Router,
-    Link,
-    useNavigate
+    Link
   } from "react-router-dom";
-import { Prev } from 'react-bootstrap/esm/PageItem';
 
 /**
  * Main component which arranges all the other components together
@@ -21,7 +17,6 @@ import { Prev } from 'react-bootstrap/esm/PageItem';
 function Mainpage(){
     return(
         <body className="background">
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossOrigin="anonymous"></script>
             <div className="container-fluid text-center">
                 <div className="row h-100 justify-content-center">
                     <div className="col-md-auto">
@@ -55,7 +50,7 @@ function Mainpage(){
  * It is used so that we can make sure that all games in the list have these two things.
  */
 interface Games{
-    code : string,
+    gameCode : string,
     noOfPlayers : number
 }
 
@@ -65,17 +60,12 @@ interface Games{
  */
 function Gamefinder(){
 
-    const GameList : Games= {
-        code : "default",
-        noOfPlayers : 0
-    } 
-
-    const [state, updateGameList] = useState(GameList)
+    const [state, updateGameList] = useState<Games[]>([])
     const [name, updateName] = useState("")
 
     useEffect(() => {
         let interval = setInterval(async () => {
-            const res = await axios.get<Games>("http://localhost:8080/matchmaking/gamelist");
+            const res = await axios.get<Games[]>("http://localhost:8080/matchmaking/gamelist");
             updateGameList(res.data)
         }, 2000);
         return () => {
@@ -103,7 +93,9 @@ function Gamefinder(){
             <div className="row h-85 justify-content-center p-3">
                 <div className="game-list">
                     <ul>
-                        {ListItem(state.code, state.noOfPlayers, name)}
+                        {
+                        state.map((game) => ListItem(game.gameCode, game.noOfPlayers, name))
+                        }
                     </ul>
                 </div>
             </div>
@@ -119,7 +111,7 @@ function Gamefinder(){
  * @returns nothing
  */
 function ListItem(gameCode : string, noOfPlayers : number, playerID : string) {
-    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to={playerID=="" ? "/" : 'unoGame/'+gameCode+"/"+playerID}> {gameCode + " " + noOfPlayers} </Link></li>)
+    return(<li onClick={e => joinGame(gameCode, noOfPlayers, playerID)}><Link to={playerID==="" ? "/" : 'unoGame/'+gameCode+"/"+playerID}> {gameCode + " " + noOfPlayers} </Link></li>)
 }
 
 /**
