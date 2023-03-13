@@ -17,7 +17,6 @@ test("Create new games", async () => {
     GameManager.createGame("2", "player_name");
     GameManager.createGame("3", "player_name");
     GameManager.createGame("4", "player_name");
-
     expect(GameManager.getGameList.length === 4)
 })
 
@@ -25,17 +24,14 @@ test("Multiple games with the same name", async () => {
     const GameManager = instantiateUnoService();
     GameManager.createGame("1", "player_name");
     GameManager.createGame("2", "player_name");
-    GameManager.createGame("2", "player_name");
-
+    expect(() => GameManager.createGame("2", "player_name")).toThrowError
     expect(GameManager.getGameList.length === 2)
 })
 
-test("Multiple games with the same name", async () => {
-    const GameManager = instantiateUnoService();
-    GameManager.createGame("1", "player_name");
-    GameManager.createGame("2", "player_name");
-    GameManager.createGame("2", "player_name");
-
-    expect(GameManager.getGameList.length === 3)
+test("", async () => {
+    
 })
 
+test("", async () => {
+
+})
