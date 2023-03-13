@@ -1,21 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { GameState } from '../uno/GameState'
-import Button from 'react-bootstrap/Button'
 import { Pile } from '../uno/Pile';
 import { Card } from '../uno/card';
 import { Colour } from '../uno/Colour';
 import { Value } from '../uno/Value';
-import { Col, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import SelectColorModal from './SelectColor';
-import CardFaceHand from './CardFaceHand';
-import "./UnoGame.css"
-import getImageName from "./getImageName"
-import DisplayOpponentDeck from "./DisplayOpponentDeck"
-import CardFaceDrawPile from './CardFaceDrawPile';
-import UnoButton from './UnoButton';
-import DrawPile from './DrawPile';
+import "./UnoGame.css";
+import DisplayOpponentDeck from "./DisplayOpponentDeck";
 import DisplayDrawPile from './DisplayDrawPile';
 import DisplayYourDeck from './DisplayYourDeck';
 import WinCard from './WinCard';

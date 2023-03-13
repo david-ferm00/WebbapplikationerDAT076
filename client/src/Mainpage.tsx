@@ -21,7 +21,6 @@ import { Prev } from 'react-bootstrap/esm/PageItem';
 function Mainpage(){
     return(
         <body className="background">
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossOrigin="anonymous"></script>
             <div className="container-fluid text-center">
                 <div className="row h-100 justify-content-center">
                     <div className="col-md-auto">

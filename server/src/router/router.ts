@@ -1,7 +1,7 @@
 import express from "express";
 import { Request, Response } from "express";
-import { instantiateUnoService } from "../service/Game";
-import { IUnoService } from "../service/Game";
+import { instantiateUnoService } from "../service/GameManager";
+import { IUnoService } from "../service/GameManager";
 import { Card } from "../model/card";
 import { Colour } from "../model/Colour";
 import { GameState } from "../model/GameState"
@@ -9,7 +9,7 @@ import { GameState } from "../model/GameState"
 
 export const router = express.Router();
 
-var unoService : IUnoService;
+var unoService : IUnoService = instantiateUnoService();
 
 interface GamelistItem{
     code : string,
@@ -23,15 +23,13 @@ router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
 
 //create a game
 router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
-    unoService = instantiateUnoService(req.params.code, req.params.id);
+    unoService.createGame(req.params.code, req.params.id);
     res.status(200)
 });
 
 //join a game
 router.put("/matchmaking/joinGame/:code/:id", async(req : Request, res: Response) => {
-    if(unoService.getCode() == req.params.code){
-        unoService.setPlayerTwo(req.params.id);
-    }
+    unoService.setPlayerTwo(req.params.id, req.params.code);
 });
 
 //give the client the state of the game
@@ -71,29 +69,6 @@ router.put("/uno/select_card/", async (
         }
         unoService.place(new Card(card.colour, card.value), player);
         res.status(200).send("Card placed");
-    } catch (e: any) {
-        res.status(500).send(e.message)
-    }
-});
-
-//select colour when such a card is placed
-router.put("/uno/select_color", async (
-    req: Request<{player_name : string , colour : Colour}>,
-    res: Response<Colour | string>
-) => {
-    try {
-        const player = req.body.player_name;
-        const colour = req.body.colour;
-        if (typeof(player) !== "string") {
-            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
-            return;
-        }
-        if (typeof(colour) !== typeof(Colour)) {
-            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- colour has type ${typeof(colour)}`);
-            return;
-        }
-        //unoService.selectColor(player, colour);
-
     } catch (e: any) {
         res.status(500).send(e.message)
     }
