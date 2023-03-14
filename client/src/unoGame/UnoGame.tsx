@@ -108,7 +108,7 @@ export function UnoGame() {
                 <DisplayYourDeck yourPile={gameState.yourPile} player_id={playerName} gameCode={gameCode}/>
             </Row>
             <Row className="justify-content-center">
-                <WinCard yourPileSize={gameState.yourPile.size()} sizeOppPile={gameState.sizeOppPile}/>
+                <WinCard yourPileSize={gameState.yourPile.length} sizeOppPile={gameState.sizeOppPile}/>
             </Row>
         </body>
     )

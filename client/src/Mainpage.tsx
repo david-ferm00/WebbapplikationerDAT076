@@ -84,7 +84,8 @@ function Gamefinder(){
                                 className="textbox" 
                                 type="text" 
                                 id="playerId" 
-                                name="playerID" 
+                                name="playerID"
+                                maxLength={16} 
                                 onChange={e => updateName(e.target.value)}/>
                         </Form.Group>
                     </Form>
@@ -154,6 +155,7 @@ class GameCreator extends Component{
                                 type="text" 
                                 id="gamecode-create" 
                                 name="gamecode" 
+                                maxLength={16}
                                 onChange={e => this.setState({ code: e.target.value, name: this.state.name })}/>
                         </Form.Group>
                     </div>
@@ -164,7 +166,8 @@ class GameCreator extends Component{
                                 className="textbox" 
                                 type="text" 
                                 id="playerId" 
-                                name="playerID" 
+                                name="playerID"
+                                maxLength={16} 
                                 onChange={e => this.setState({ code: this.state.code, name: e.target.value })}/>
                         </Form.Group>
                     </div>

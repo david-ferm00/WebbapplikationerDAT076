@@ -58,6 +58,10 @@ export class Pile{
         return deck;
     }
 
+    shuffleThisDeck() : Array<Card>{
+        return this.shuffleDeck(this.pile);
+    }
+
     pickTopCard(): Card{
         let card: Card = this.pile.pop()!;
         return card;
