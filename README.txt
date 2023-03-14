@@ -16,5 +16,6 @@ Model contains the model of the project on the server side. Router contains thre
 router.ts. Service has the game manager and the main game class, which is the controller for an instance of the game.
 
 Tests for the server are made written in the server folder, and are the files with the .test.ts suffix.
+Similarly tests for the front-end are written in the client folder in the file App.text.tsx
 
 The report for this project can be found in the assets folder.
