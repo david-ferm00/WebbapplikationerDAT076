@@ -3,12 +3,8 @@ import {Card} from './card';
 /**
  * A class which is a collection of cards, and the logic one would want to have.
  */
-export class Pile extends Array{
+export class Pile{
     pile: Array<Card> = [];
-
-    constructor(empty : Boolean){
-        super();
-    }
 
     pickTopCard(): Card{
         let card: Card = this.pile.pop()!;

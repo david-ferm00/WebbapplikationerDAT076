@@ -33,7 +33,7 @@ export function UnoGame() {
     }
     
     const defaultGameState:GameState = {
-        yourPile: new Pile(true),
+        yourPile: new Pile(),
         yourTurn: false,
         sizeGamePile: 0,
         sizeDrawPile: 4,
@@ -108,7 +108,7 @@ export function UnoGame() {
                 <DisplayYourDeck yourPile={gameState.yourPile} player_id={playerName} gameCode={gameCode}/>
             </Row>
             <Row className="justify-content-center">
-                <WinCard yourPileSize={gameState.yourPile.length} sizeOppPile={gameState.sizeOppPile}/>
+                <WinCard yourPileSize={gameState.yourPile.pile.length} sizeOppPile={gameState.sizeOppPile}/>
             </Row>
         </body>
     )

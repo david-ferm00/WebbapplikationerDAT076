@@ -161,7 +161,7 @@ export class Game{
         let intervalId = setInterval(() => {
             counter = counter - 1;
             if(counter === 0){
-                if(this.uno===false){
+                if(this.uno===false && player===this.currentPlayer){
                     this.falseUno(player);
                 } else {
                     this.uno = false;

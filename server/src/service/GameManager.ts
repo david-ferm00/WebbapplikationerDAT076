@@ -9,7 +9,7 @@ export interface IUnoService {
 
     // TODO Change these to return promises!! No voids, they should return something
     createGame(code : string, name : string) : Promise<Boolean>
-    getState(requestedPlayer : string, code : string) : GameState
+    getState(requestedPlayer : string, code : string) : Promise<GameState>
     place(code : string, card: Card, player: string) : Promise<Boolean>
     getGameList() : Promise<GameListElement[]>
     setPlayerTwo(id : string, code : string) : Promise<Boolean>
@@ -73,16 +73,16 @@ export class GameManager implements IUnoService{
      * @param code is the code of the game where this request was made
      * @returns the state of the game
      */
-    getState(requestedPlayer : string, code : string) : GameState {
+    async getState(requestedPlayer : string, code : string) : Promise<GameState> {
         var gameState : GameState = new GameState(new Pile(true), false, 0, 0, 0, new Card(0,0), "");
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
                 gameState = game.getState(requestedPlayer);
             }
         });
-        /*if(gameState.sizeDrawPile===0 && gameState.sizeGamePile===0 && gameState.sizeOppPile===0){
+        if(gameState.sizeDrawPile===0 && gameState.sizeGamePile===0 && gameState.sizeOppPile===0){
             throw new Error("Cannot find game");
-        }*/
+        }
         return gameState;
     }
 

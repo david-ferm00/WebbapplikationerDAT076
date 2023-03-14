@@ -42,7 +42,9 @@ router.post("/matchmaking/creategame/:code/:id", async(req : GameRequest, res: R
         }
         if(await unoService.createGame(code, player)) {
             res.status(200).send("Game created")
-        } 
+        }else{
+            res.status(400).send("Gamecode already exists")
+        }
         
     } catch (e : any) {
         console.error(e.stack)
@@ -84,7 +86,7 @@ router.get("/uno/game_state/:code/:id", async (req: GameRequest, res: Response<G
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- code has type ${typeof(code)}`);
         }
 
-        const gameState : GameState = unoService.getState(player, code);
+        const gameState : GameState = await unoService.getState(player, code);
         res.status(200).send(gameState);
     } catch (e: any) {
         console.error(e.stack)
@@ -105,9 +107,11 @@ router.put("/uno/pickUpCard/:code/:id", async (req: GameRequest, res: Response<s
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- code has type ${typeof(code)}`);
         }
 
-        await unoService.pickUpCard(player, code)
-        
+        if(await unoService.pickUpCard(player, code)){
             res.status(200).send("Success")
+        } else {
+            res.status(400).send("unable to pick up card at the moment")
+        }
         
         
     } catch (e: any) {
