@@ -48,7 +48,11 @@ export class Game{
             this.handPlayer1.addCard(this.drawDeck.pickTopCard());
             this.handPlayer2.addCard(this.drawDeck.pickTopCard());           
         }
+
         this.discardPile.addCard(this.drawDeck.pickTopCard());
+        while(this.discardPile.seeTopCard().colour===Colour.none){
+            this.discardPile.addCard(this.drawDeck.pickTopCard());
+        }
 
         this.player2Name = "";
         this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard(), this.player2Name);
@@ -109,8 +113,8 @@ export class Game{
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
         }
-        if(player == this.player1Name && this.currentPlayer==1){
-            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+        if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+            if(player == this.player1Name && this.currentPlayer==1){
                 if(this.handPlayer1.includes(actualCard)){
                     this.handPlayer1.remove(actualCard);
                     this.discardPile.addCard(card);
@@ -121,11 +125,12 @@ export class Game{
                             this.cardFromDrawPile(this.player2Name)
                         }
                     }
-                    result = true;
+
+                    if(this.handPlayer1.size()===1) this.startUnoTimer(1);
+                    
+                    return true;
                 }
-            }
-        } else if(player == this.player2Name && this.currentPlayer==2){
-            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+            } else if(player == this.player2Name && this.currentPlayer==2){
                 if(this.handPlayer2.includes(actualCard)){
                     this.handPlayer2.remove(actualCard);
                     this.discardPile.addCard(card);
@@ -136,11 +141,31 @@ export class Game{
                             this.cardFromDrawPile(this.player1Name)
                         }
                     }
-                    result = true;
+
+                    if(this.handPlayer1.size()===1) this.startUnoTimer(2);
+                    
+                    return true;
                 }
             }
         }
         return result;
+    }
+
+    //what if both players need to press uno at the same time?
+    private startUnoTimer(player : number){
+        var counter = 2;
+        this.uno = false;
+        let intervalId = setInterval(() => {
+            counter = counter - 1;
+            if(counter === 0){
+                if(this.uno===false){
+                    this.falseUno(player);
+                } else {
+                    this.uno = false;
+                }
+                clearInterval(intervalId)
+            } 
+        }, 1000)
     }
 
     /**
