@@ -101,8 +101,10 @@ export class Game{
      * It only places the card if it is allowed according to the rules of UNO
      * @param card the selected card
      * @param player the player who is trying to place the card
+     * @returns Boolean that indicates if the placement was successful
      */
-    place(card: Card, player: String){
+    place(card: Card, player: String): Boolean{
+        var result:Boolean = false;
         var actualCard = card;
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
@@ -142,7 +144,7 @@ export class Game{
                 }
             }
         }
-        return false;
+        return result;
     }
 
     //what if both players need to press uno at the same time?
