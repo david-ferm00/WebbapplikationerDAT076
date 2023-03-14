@@ -91,6 +91,12 @@ export class Game{
             case this.player2Name: this.handPlayer2.addCard(this.drawDeck.pickTopCard()); break;
             default: throw Error("not a player"); break;
         }
+        if(this.drawDeck.size()===0){
+            var topCard : Card = this.discardPile.pickTopCard();
+            this.drawDeck.pile = this.discardPile.shuffleThisDeck();
+            this.discardPile = new Pile(true);
+            this.discardPile.addCard(topCard);
+        }
     }
 
     /**
