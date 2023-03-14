@@ -10,10 +10,10 @@ export interface IUnoService {
     // TODO Change these to return promises!! No voids, they should return something
     createGame(code : string, name : string) : Promise<Boolean>
     getState(requestedPlayer : string, code : string) : GameState
-    place(code : string, card: Card, player: string) : Boolean
-    getGameList() : GameListElement[]
-    setPlayerTwo(id : string, code : string) : void
-    sayUno(player : string, code : string) : void
+    place(code : string, card: Card, player: string) : Promise<Boolean>
+    getGameList() : Promise<GameListElement[]>
+    setPlayerTwo(id : string, code : string) : Promise<Boolean>
+    sayUno(player : string, code : string) : Promise<Boolean>
     pickUpCard(player : string, code : string) : void
 }
 
@@ -57,7 +57,7 @@ export class GameManager implements IUnoService{
      * @param player is the player who wants to place the card
      * @returns a boolean on whether the card was placed or not
      */
-    place(code : string, card: Card, player: String) : Boolean{
+    async place(code : string, card: Card, player: String): Promise<Boolean> {
         var result:Boolean = false;
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
@@ -80,30 +80,51 @@ export class GameManager implements IUnoService{
                 gameState = game.getState(requestedPlayer);
             }
         });
+        /*if(gameState.sizeDrawPile===0 && gameState.sizeGamePile===0 && gameState.sizeOppPile===0){
+            throw new Error("Cannot find game");
+        }*/
         return gameState;
     }
 
-    getGameList() : GameListElement[]{
+    async getGameList() : Promise<GameListElement[]> {
         return this.gameList;
     }
 
     /**
-     * This function sets the name of the second player in the game that they want to join
-     * It also updates the gameListElement of that game.
-     * @param id is the id of the second player
-     * @param code is the code of the game which the user wants to join
+     * A function for setting the name for the second player
+     * This function is called when a request is made for joining a game
+     * @param id the name of player2
      */
-    setPlayerTwo(id: string, code : string): void {
+    async setPlayerTwo(id: string, code : string): Promise<Boolean> {
+        var result: Boolean = false;
+        function existingGameName(game: Game | GameListElement): Boolean {
+            return game.gameCode === code
+        }
+        
+        if(this.currentGames.find(existingGameName) === undefined) {
+            throw Error(` There is no game in currentGames with code: ${code}`)
+        }
+        
         this.currentGames.forEach(game => {
-            if(game.getCode()===code){
+            if(game.getCode() === code) {
+                if(game.player1Name === id) {
+                    throw Error(`Second player: ${id} can't have the same name as the first player ${game.player1Name}`)
+                }
                 game.setPlayerTwo(id);
+                result = true;
             }
         });
+
+        if(this.gameList.find(existingGameName) === undefined) {
+            throw Error(` There is no game in gameList with code: ${code}`)
+        }
+
         this.gameList.forEach(game => {
             if(game.gameCode===code){
                 game.noOfPlayers += 1;
             }
         });
+        return result;
     }
 
     /**
@@ -111,12 +132,23 @@ export class GameManager implements IUnoService{
      * @param player is the user who pressed the uno button
      * @param code is the code of the game where the uno button was pressed
      */
-    sayUno(player : string, code : string) : void{
+    async sayUno(player : string, code : string) : Promise<Boolean> {
+        var result: Boolean = false;
+        function existingGameName(game: Game | GameListElement): Boolean {
+            return game.gameCode === code
+        }
+
+        if(this.currentGames.find(existingGameName) === undefined) {
+            throw Error(` There is no game in gameList with code: ${code}`)
+        }
+
         this.currentGames.forEach(game => {
-            if(game.getCode()===code){
+            if(game.getCode() === code){
                 game.sayUno(player);
+                result = true;
             }            
         });
+        return result
     }
 
     /**
