@@ -48,7 +48,11 @@ export class Game{
             this.handPlayer1.addCard(this.drawDeck.pickTopCard());
             this.handPlayer2.addCard(this.drawDeck.pickTopCard());           
         }
+
         this.discardPile.addCard(this.drawDeck.pickTopCard());
+        while(this.discardPile.seeTopCard().colour===Colour.none){
+            this.discardPile.addCard(this.drawDeck.pickTopCard());
+        }
 
         this.player2Name = "";
         this.gameStatePlayer1 = new GameState(this.handPlayer1, this.currentPlayer==1 ? true:false, this.discardPile.size(), this.drawDeck.size(), this.handPlayer2.size(), this.discardPile.seeTopCard(), this.player2Name);
