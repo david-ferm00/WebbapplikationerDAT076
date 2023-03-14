@@ -67,9 +67,20 @@ router.put("/uno/pickUpCard/:code/:id", async (req: Request, res: Response) =>{
     }
 });
 
+// request 
+interface GameStateRequest extends Request{
+    params : {}
+    body : {}
+}
+
+// request 
+interface SelectCardRequest extends Request{
+    body : {card:Card, code:string, id:string}
+}
+
 //places a card from the players hand
 router.put("/uno/select_card/", async (
-    req: Request<{},{},{card:Card, code:string, id:string}>,
+    req: SelectCardRequest,
     res: Response<Card | string>
 ) => {
     try {
@@ -82,8 +93,8 @@ router.put("/uno/select_card/", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
-        if(unoService.place(req.body.code, new Card(card.colour, card.value), player)) {
-            res.status(200).send("Card placed");
+        if(await unoService.place(req.body.code, new Card(card.colour, card.value), player)) {
+            res.status(200).send(card);
         } else {
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card: ${card} is not present in the hand of ${player}`);
             return;
