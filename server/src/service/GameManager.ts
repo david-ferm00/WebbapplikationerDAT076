@@ -7,10 +7,10 @@ import { GameListElement } from './GameListElement';
 export interface IUnoService {
     // define methods to inferface with the router layer
 
+    // TODO Change these to return promises!! No voids, they should return something
     createGame(code : string, name : string) : void
-
     getState(requestedPlayer : string, code : string) : GameState
-    place(code : string, card: Card, player: string) : void
+    place(code : string, card: Card, player: string) : Boolean
     getGameList() : GameListElement[]
     setPlayerTwo(id : string, code : string) : void
     sayUno(player : string, code : string) : void
@@ -31,13 +31,16 @@ export class GameManager implements IUnoService{
      * It only places the card if it is allowed according to the rules of UNO
      * @param card the selected card
      * @param player the player who is trying to place the card
+     * @returns Boolean that indicates if the placement of a card was successful
      */
-    place(code : string, card: Card, player: String){
+    place(code : string, card: Card, player: String) : Boolean{
+        var result:Boolean = false;
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
-                game.place(card, player);
+                result = game.place(card, player);
             }
         });
+        return result;
     }
 
     /**
@@ -45,7 +48,7 @@ export class GameManager implements IUnoService{
      * @param requestedPlayer the player who is requesting the state
      * @returns the state of the game
      */
-    getState(requestedPlayer : string, code : string) : GameState{
+    getState(requestedPlayer : string, code : string) : GameState {
         var gameState : GameState = new GameState(new Pile(true), false, 0, 0, 0, new Card(0,0), "");
         this.currentGames.forEach(game => {
             if(game.getCode()===code){

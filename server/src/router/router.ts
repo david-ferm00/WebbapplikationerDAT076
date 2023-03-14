@@ -72,7 +72,7 @@ router.put("/uno/select_card/", async (
     res: Response<Card | string>
 ) => {
     try {
-        const player = req.body.id;
+        const player:string = req.body.id;
         const card:Card = req.body.card;
         if (typeof(player) !== "string") {
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
@@ -81,8 +81,13 @@ router.put("/uno/select_card/", async (
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card has type ${typeof(card)}`);
             return;
         }
-        unoService.place(req.body.code, new Card(card.colour, card.value), player);
-        res.status(200).send("Card placed");
+        if(unoService.place(req.body.code, new Card(card.colour, card.value), player)) {
+            res.status(200).send("Card placed");
+        } else {
+            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- card: ${card} is not present in the hand of ${player}`);
+            return;
+        }
+        
     } catch (e: any) {
         console.error(e.stack)
         res.status(500).send(e.message)

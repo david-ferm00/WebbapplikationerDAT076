@@ -101,8 +101,10 @@ export class Game{
      * It only places the card if it is allowed according to the rules of UNO
      * @param card the selected card
      * @param player the player who is trying to place the card
+     * @returns Boolean that indicates if the placement was successful
      */
-    place(card: Card, player: String){
+    place(card: Card, player: String): Boolean{
+        var result:Boolean = false;
         var actualCard = card;
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
@@ -119,8 +121,7 @@ export class Game{
                             this.cardFromDrawPile(this.player2Name)
                         }
                     }
-                    
-                    return true;
+                    result = true;
                 }
             }
         } else if(player == this.player2Name && this.currentPlayer==2){
@@ -135,12 +136,11 @@ export class Game{
                             this.cardFromDrawPile(this.player1Name)
                         }
                     }
-    
-                    return true;
+                    result = true;
                 }
             }
         }
-        return false;
+        return result;
     }
 
     /**
