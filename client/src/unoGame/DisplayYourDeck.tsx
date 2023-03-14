@@ -25,7 +25,7 @@ function DisplayYourDeck (props:{yourPile : Pile, player_id : string, gameCode :
     }
 
     async function putCard(cardToSend:Card){
-        await axios.put("http://localhost:8080/uno/select_card/", {card : cardToSend, code : props.gameCode, id : props.player_id});
+        await axios.put("http://localhost:8080/uno/select_card/"+props.gameCode+"/"+props.player_id, {card : cardToSend});
     }
 
     var returnValue

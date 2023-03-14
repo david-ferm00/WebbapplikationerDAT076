@@ -107,9 +107,9 @@ export class Game{
      * @param player the player who is trying to place the card
      * @returns Boolean that indicates if the placement was successful
      */
-    place(card: Card, player: String): Boolean{
+    place(card: Card, player: String): Boolean {
         var result:Boolean = false;
-        var actualCard = card;
+        var actualCard: Card = card;
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
         }
