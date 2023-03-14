@@ -1,13 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Button from 'react-bootstrap/Button';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  Link,
 } from "react-router-dom";
 import UnoGame from './unoGame/UnoGame';
 import Mainpage from './Mainpage';

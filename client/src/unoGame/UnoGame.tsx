@@ -19,6 +19,7 @@ import WinCard from './WinCard';
 /**
  * This is the main component of the game page. It brings everything together as well as gives the nessecary information to each component
  * Here, a call to the server requesting the game state is made every 200ms, and then the gamestate is updated.
+ * The component is made up of three rows. The opponent's hand, the center row containing draw and discard pile and the user's hand.
  * @returns nothing
  */
 export function UnoGame() {
@@ -107,7 +108,7 @@ export function UnoGame() {
                 <DisplayYourDeck yourPile={gameState.yourPile} player_id={playerName} gameCode={gameCode}/>
             </Row>
             <Row className="justify-content-center">
-                <WinCard yourPileSize={gameState.yourPile.length} sizeOppPile={gameState.sizeOppPile}/>
+                <WinCard yourPileSize={gameState.yourPile.size()} sizeOppPile={gameState.sizeOppPile}/>
             </Row>
         </body>
     )

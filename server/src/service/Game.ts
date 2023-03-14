@@ -3,18 +3,11 @@ import {Pile} from '../model/Pile';
 import { GameState } from '../model/GameState';
 import { Colour } from '../model/Colour';
 
-/*export interface IUnoService {
-    // define methods to inferface with the router layer
-
-    getState(requestedPlayer : string) : GameState
-    place(card: Card, player: string) : void
-    getCode() : string
-    getNoOfPlayers() : number
-    setPlayerTwo(id : string) : void
-    sayUno(player : string) : void
-    pickUpCard(player : string) : void
-}*/
-
+/**
+ * This class represents one instance of a game
+ * The instance variables are fairly self-explanatory, except maybe uno
+ * uno is a variable which tells us whether the uno button has been pressed or not
+ */
 export class Game{
     player1Name : string;
     player2Name : string;
@@ -151,7 +144,11 @@ export class Game{
         return result;
     }
 
-    //what if both players need to press uno at the same time?
+    /**
+     * If a player has reached only one card, this function is called, which starts a timer for 2 seconds
+     * When the timer runs out, if the player has not pressed the button, they recieve two cards.
+     * @param player which player has only one card
+     */
     private startUnoTimer(player : number){
         var counter = 2;
         this.uno = false;
@@ -275,7 +272,3 @@ export class Game{
         return bool;
     }
 }
-
-/*export function instantiateUnoService(code: string, playerName: string) : IUnoService {
-    return new Game(code, playerName); 
-}*/

@@ -1,6 +1,9 @@
 import { Card } from "./card";
 import { Pile } from "./Pile";
 
+/**
+ * This is a class defining the information that the client needs to be able to show the user the appropriate information
+ */
 export class GameState {
     yourPile: Pile;
     yourTurn: boolean;

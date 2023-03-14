@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import CardFaceDrawPile from "./CardFaceDrawPile";
+import CardFaceDiscardPile from "./CardFaceDiscardPile";
 import DrawPile from "./DrawPile";
 import { Card } from "../uno/card";
 import UnoButton from "./UnoButton";
@@ -21,7 +21,7 @@ function DisplayDrawPile(props:{topCard : Card, playerName : string, gameCode : 
                     <Row>
                         <Col className='zoom'><DrawPile gameCode={props.gameCode} playerName={props.playerName}/></Col>
                         <Col><UnoButton playerName={props.playerName} gameCode={props.gameCode}/></Col>
-                        <Col><CardFaceDrawPile card={props.topCard}/></Col>
+                        <Col><CardFaceDiscardPile card={props.topCard}/></Col>
                     </Row>
                 </Col>
             </Row>

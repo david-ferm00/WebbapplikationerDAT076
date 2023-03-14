@@ -5,7 +5,7 @@ import CardBack from "./CardBack"
 /**
  * Component for displaying the opponents hand
  * @param size the size of the opponents hand
- * @returns 
+ * @returns nothing
  */
 function DisplayOpponentDeck (props:{size:number}) {
 

@@ -9,7 +9,10 @@ import { Value } from "../uno/Value";
 import { SelectColor } from "./SelectColor"
 
 /**
- * Component for displaying the users hand
+ * Component for displaying the user's hand
+ * There are some functions which are defined here that are then sent to other components so that they can make changes to themselves.
+ * The reason for this is that we want to keep the colour choosing component separate. However, in order to have the colour changing
+ * feature, we need to be able to make changes to the card.
  * @param yourPile the users hand
  * @param player1Name the users name
  * @param gameCode the gamecode
