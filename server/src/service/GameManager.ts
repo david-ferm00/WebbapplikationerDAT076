@@ -18,7 +18,7 @@ export interface IUnoService {
 }
 
 export class GameManager implements IUnoService{
-    currentGames : Game[] = [];
+    private currentGames : Game[] = [];
     gameList : GameList[] = [];
 
     createGame(code: string, name: string): void {

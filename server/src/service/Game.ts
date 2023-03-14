@@ -107,8 +107,8 @@ export class Game{
         if(card.value==11 || card.value==12){
             actualCard = new Card(4, card.value);
         }
-        if(player == this.player1Name && this.currentPlayer==1){
-            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+        if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+            if(player == this.player1Name && this.currentPlayer==1){
                 if(this.handPlayer1.includes(actualCard)){
                     this.handPlayer1.remove(actualCard);
                     this.discardPile.addCard(card);
@@ -119,12 +119,12 @@ export class Game{
                             this.cardFromDrawPile(this.player2Name)
                         }
                     }
+
+                    if(this.handPlayer1.size()===1) this.startUnoTimer(1);
                     
                     return true;
                 }
-            }
-        } else if(player == this.player2Name && this.currentPlayer==2){
-            if(actualCard.colour===this.topOfDiscard().colour || actualCard.value===this.topOfDiscard().value || actualCard.colour==4){
+            } else if(player == this.player2Name && this.currentPlayer==2){
                 if(this.handPlayer2.includes(actualCard)){
                     this.handPlayer2.remove(actualCard);
                     this.discardPile.addCard(card);
@@ -135,12 +135,31 @@ export class Game{
                             this.cardFromDrawPile(this.player1Name)
                         }
                     }
-    
+
+                    if(this.handPlayer1.size()===1) this.startUnoTimer(2);
+                    
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    //what if both players need to press uno at the same time?
+    private startUnoTimer(player : number){
+        var counter = 2;
+        this.uno = false;
+        let intervalId = setInterval(() => {
+            counter = counter - 1;
+            if(counter === 0){
+                if(this.uno===false){
+                    this.falseUno(player);
+                } else {
+                    this.uno = false;
+                }
+                clearInterval(intervalId)
+            } 
+        }, 1000)
     }
 
     /**
