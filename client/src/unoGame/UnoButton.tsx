@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap"
  * Simple component for the uno button and its logic
  * @param player1Name the users name
  * @param gameCode the game code
- * @returns 
+ * @returns nothing
  */
 function UnoButton(props:{playerName : string, gameCode : string}){
     async function onClick(){

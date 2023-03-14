@@ -1,6 +1,9 @@
 import { Card } from "./card";
 import { Pile } from "./Pile";
 
+/**
+ * This class represents the information which is received from the server regarding the state of the game
+ */
 export class GameState {
     yourPile: Pile;
     yourTurn: boolean;

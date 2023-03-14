@@ -19,6 +19,7 @@ import WinCard from './WinCard';
 /**
  * This is the main component of the game page. It brings everything together as well as gives the nessecary information to each component
  * Here, a call to the server requesting the game state is made every 200ms, and then the gamestate is updated.
+ * The component is made up of three rows. The opponent's hand, the center row containing draw and discard pile and the user's hand.
  * @returns nothing
  */
 export function UnoGame() {

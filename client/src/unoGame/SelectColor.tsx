@@ -6,7 +6,14 @@ import "./SelectColor.css"
 import {Colour} from "../uno/Colour"
 import { ChangeEventHandler } from "react";
 
-
+/**
+ * This component is responsible for the user being able to select colours.
+ * When the user places a "colour change card" this component appears and allows the user to pick the new colour of play
+ * This new colour is then set as the cards colour, before it is sent to the server to be placed.
+ * @param toggleColorSelect is a function which either shows or hides this component
+ * @param selectSpecialCard is a function which decides what the new colour of play will be. 
+ * @returns nothing
+ */
 export function SelectColor (props: {toggleSelectColour: Function, selectSpecialCard: Function}) {
 
     const [colour, setColor] = useState<Colour>(Colour.none)
@@ -41,6 +48,7 @@ export function SelectColor (props: {toggleSelectColour: Function, selectSpecial
                 id="red"
                 label={<img className="zoom" src={require("../images/red.jpg")} alt={"red"}/>}>
                 </Form.Check>
+
                 <Form.Check
                 inline
                 value={Colour.blue}
@@ -49,6 +57,7 @@ export function SelectColor (props: {toggleSelectColour: Function, selectSpecial
                 id="blue"
                 label={<img className="zoom" src={require("../images/blue.jpg")} alt={"blue"}/>}>
                 </Form.Check>
+
                 <Form.Check
                 inline
                 value={Colour.yellow}
@@ -57,6 +66,7 @@ export function SelectColor (props: {toggleSelectColour: Function, selectSpecial
                 id="yellow"
                 label={<img className="zoom" src={require("../images/yellow.jpg")} alt={"yellow"}/>}>
                 </Form.Check>
+
                 <Form.Check
                 inline
                 value={Colour.green}

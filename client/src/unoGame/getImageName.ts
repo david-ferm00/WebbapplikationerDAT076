@@ -1,11 +1,10 @@
 import { Card } from "../uno/card";
 
 /**
- * In the CardFace component we need to select the correct image for the correct card
- * There is a naming system in the image files and so this function takes a card and 
- * gives the correct imagecode
+ * For components where the card's face is shown. There needs to be a way for the card to find the correct image.
+ * This function takes a card and gives back the corresponding image file name 
  * @param card The card to be shown
- * @returns nothing
+ * @returns the name of the image file
  */
 function getImageName(card: Card) : string{
     var result = ""
