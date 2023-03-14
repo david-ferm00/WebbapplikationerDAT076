@@ -67,7 +67,7 @@ function Gamefinder(){
         let interval = setInterval(async () => {
             const res = await axios.get<Games[]>("http://localhost:8080/matchmaking/gamelist");
             updateGameList(res.data)
-        }, 2000);
+        }, 200);
         return () => {
             clearInterval(interval);
         };
