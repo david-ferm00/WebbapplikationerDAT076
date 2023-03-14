@@ -67,7 +67,7 @@ router.put("/matchmaking/joinGame/:code/:id", async(req : GameRequest, res: Resp
         }
     } catch (e: any) {
         console.error(e.stack)
-        res.status(500).send(`Failed to join game ${e.message}`)
+        res.status(500).send(`Failed to join game. ${e.message}`)
     }
 });
 
@@ -88,7 +88,7 @@ router.get("/uno/game_state/:code/:id", async (req: GameRequest, res: Response<G
         res.status(200).send(gameState);
     } catch (e: any) {
         console.error(e.stack)
-        res.status(500).send(`Failed to get game state ${e.message}`);
+        res.status(500).send(`Failed to get game state. ${e.message}`);
     }
 });
 
@@ -105,14 +105,14 @@ router.put("/uno/pickUpCard/:code/:id", async (req: GameRequest, res: Response<s
             res.status(400).send(`Bad PUT call to ${req.originalUrl} --- code has type ${typeof(code)}`);
         }
 
-        unoService.pickUpCard(player, code)
+        await unoService.pickUpCard(player, code)
         
             res.status(200).send("Success")
         
         
     } catch (e: any) {
         console.error(e.stack)
-        res.status(400).send(`Failed ${e.message}`)
+        res.status(400).send(`Failed. ${e.message}`)
     }
 });
 
@@ -148,19 +148,26 @@ router.put("/uno/select_card/:code/:id", async (req: GameRequest, res: Response<
 
 //when the uno button is pressed
 router.put("/uno/say_uno/:code/:id", async (
-    req: Request,
+    req: GameRequest,
     res: Response<string>
 ) => {
     try {
-        const player = req.params.id;
+        const player:string = req.params.id;
+        const code:string = req.params.code;
+
         if (typeof(player) !== "string") {
-            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- player_name has type ${typeof(player)}`);
-            return;
-        }
-        unoService.sayUno(player,req.params.code);
+            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- id has type ${typeof(player)}`);
+        };
+        if (typeof(code) !== "string") {
+            res.status(400).send(`Bad PUT call to ${req.originalUrl} --- code has type ${typeof(code)}`);
+        };
+
+        if(await unoService.sayUno(player, code)) {
+            res.status(200).send("Success")
+        };
 
     } catch (e: any) {
         console.error(e.stack)
-        res.status(500).send(e.message)
+        res.status(500).send(`Failed to say uno. ${e.message}`)
     }
 });

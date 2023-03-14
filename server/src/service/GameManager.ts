@@ -14,7 +14,7 @@ export interface IUnoService {
     getGameList() : Promise<GameListElement[]>
     setPlayerTwo(id : string, code : string) : Promise<Boolean>
     sayUno(player : string, code : string) : Promise<Boolean>
-    pickUpCard(player : string, code : string) : void
+    pickUpCard(player : string, code : string) : Promise<Boolean>
 }
 
 /**
@@ -139,7 +139,7 @@ export class GameManager implements IUnoService{
         }
 
         if(this.currentGames.find(existingGameName) === undefined) {
-            throw Error(` There is no game in gameList with code: ${code}`)
+            throw Error(` There is no game in currentGames with code: ${code}`)
         }
 
         this.currentGames.forEach(game => {
@@ -156,12 +156,15 @@ export class GameManager implements IUnoService{
      * @param player the player requesting a card
      * @param code the code of the game where this occured
      */
-    pickUpCard(player: string, code : string): void{
+    async pickUpCard(player: string, code : string): Promise<Boolean>{
+        var result:Boolean = false;
         this.currentGames.forEach(game => {
             if(game.getCode()===code){
                 game.pickUpCard(player);
+                result = true;
             }
         });
+        return result;
     }
 }
 
