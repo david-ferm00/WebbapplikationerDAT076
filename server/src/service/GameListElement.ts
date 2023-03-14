@@ -6,4 +6,8 @@ export class GameListElement{
         this.gameCode = code;
         this.noOfPlayers = noOfPlayers;
     }
+
+    getCode(): string {
+        return this.gameCode;
+    }
 }

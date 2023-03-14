@@ -8,7 +8,7 @@ export interface IUnoService {
     // define methods to inferface with the router layer
 
     // TODO Change these to return promises!! No voids, they should return something
-    createGame(code : string, name : string) : void
+    createGame(code : string, name : string) : Promise<Boolean>
     getState(requestedPlayer : string, code : string) : GameState
     place(code : string, card: Card, player: string) : Boolean
     getGameList() : GameListElement[]
@@ -21,9 +21,23 @@ export class GameManager implements IUnoService{
     currentGames : Game[] = [];
     gameList : GameListElement[] = [];
 
-    createGame(code: string, name: string): void {
-        this.currentGames.push(new Game(code, name));
-        this.gameList.push(new GameListElement(code, 1));
+    async createGame(code: string, name: string): Promise<Boolean> {
+        var result:Boolean = true
+        function sameName(game : Game | GameListElement): Boolean {
+            return (game.getCode() === code)
+        }
+        if(this.currentGames.find(sameName) === undefined) {
+            this.currentGames.push(new Game(code, name));
+        } else {
+            result = false
+        }
+
+        if(this.gameList.find(sameName) === undefined) {
+            this.gameList.push(new GameListElement(code, 1));
+        } else {
+            result = false
+        }
+        return result
     }
 
     /**

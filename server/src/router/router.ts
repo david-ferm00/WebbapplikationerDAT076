@@ -23,10 +23,11 @@ router.get("/matchmaking/gamelist", async(req: Request, res: Response) => {
 });
 
 //create a game
+//TODO Maybe return the gamelistelement if success?
 router.post("/matchmaking/creategame/:code/:id", async(req : Request, res: Response) => {
     try {
-        unoService.createGame(req.params.code, req.params.id);
-        res.status(200)
+        const result: Boolean = await unoService.createGame(req.params.code, req.params.id);
+        res.status(200).send("Game created")
     } catch (e : any) {
         console.error(e.stack)
         res.status(500).send(e.message)
